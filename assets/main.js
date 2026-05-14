@@ -280,6 +280,69 @@ function restartTutorial() {
   location.reload();
 }
 
+// ─── Leaderboard ───────────────────────────────────────────────────────────
+const LEADERBOARD_KEY = 'veraoProgramacaoLeaderboard:v1';
+
+function loadLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function openLeaderboardModal() {
+  const modal = document.getElementById('leaderboardModal');
+  document.getElementById('modalScore').textContent = appState.score;
+  document.getElementById('modalCompleted').textContent =
+    Object.keys(appState.completed).length + '/' + exercises.length;
+  const minutes = String(Math.floor(appState.timeSpent / 60)).padStart(2, '0');
+  const seconds = String(appState.timeSpent % 60).padStart(2, '0');
+  document.getElementById('modalTime').textContent = minutes + ':' + seconds;
+  document.getElementById('lbName').value = '';
+  document.getElementById('lbEmail').value = '';
+  document.getElementById('lbFeedback').textContent = '';
+  modal.hidden = false;
+  document.getElementById('lbName').focus();
+}
+
+function closeLeaderboardModal() {
+  document.getElementById('leaderboardModal').hidden = true;
+}
+
+function submitToLeaderboard(event) {
+  event.preventDefault();
+  const name = document.getElementById('lbName').value.trim();
+  const email = document.getElementById('lbEmail').value.trim();
+  if (!name || !email) return;
+
+  const entry = {
+    name,
+    email,
+    score: appState.score,
+    completed: Object.keys(appState.completed).length,
+    total: exercises.length,
+    timeSpent: appState.timeSpent,
+    submittedAt: new Date().toISOString(),
+  };
+
+  const entries = loadLeaderboard();
+  const existing = entries.findIndex((e) => e.email === email);
+  if (existing >= 0) {
+    if (entry.score >= entries[existing].score) entries[existing] = entry;
+  } else {
+    entries.push(entry);
+  }
+  entries.sort((a, b) => b.score - a.score);
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(entries));
+
+  document.getElementById('lbFeedback').textContent = '✓ Pontuação guardada!';
+  setTimeout(() => {
+    closeLeaderboardModal();
+    window.open('leaderboard.html', '_blank');
+  }, 900);
+}
+
 function handlePreviewMessage(event) {
   const msgType = event.data?.type;
   if (!msgType) return;
@@ -327,6 +390,17 @@ function handleStudentCodeResult(data) {
 }
 
 function handleEditorIndent(event) {
+  if (event.key === 'Tab') {
+    event.preventDefault();
+    const start = event.currentTarget.selectionStart;
+    const end = event.currentTarget.selectionEnd;
+    const value = event.currentTarget.value;
+    event.currentTarget.value = value.substring(0, start) + '  ' + value.substring(end);
+    event.currentTarget.selectionStart = event.currentTarget.selectionEnd = start + 2;
+    saveCurrentCode();
+    return;
+  }
+
   if (event.key !== 'Enter') return;
 
   event.preventDefault();

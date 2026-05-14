@@ -1,5 +1,6 @@
 window.exerciseTopics = window.exerciseTopics || [];
 
+(() => {
 const resultApi = `
   function mostrarResultado(valor) {
     const result = Number(valor);
@@ -102,7 +103,7 @@ window.exerciseTopics.push({
     {
       id: 'numeros-divisao-zero',
       title: 'Dividir por zero',
-      points: 10,
+      points: 15,
       explanation: [
         'Nem todas as contas fazem sentido. Dividir por zero é uma situação especial: em matemática, essa operação não está definida.',
         'Programar também é prever problemas. Em vez de deixar a conta correr e dar um resultado estranho, podemos testar antes. Para isso usamos if.',
@@ -136,3 +137,4 @@ window.exerciseTopics.push({
     },
   ],
 });
+})();

@@ -18,6 +18,7 @@
         <div>Pontuação: <span id="score">0</span></div>
         <div>Concluídos: <span id="completedCount">0</span>/<span id="totalCount">0</span></div>
         <div>Tempo: <span id="timer">00:00</span></div>
+        <button type="button" class="lb-open-btn" onclick="openLeaderboardModal()">🏆 Leaderboard</button>
       </div>
     </header>
 
@@ -90,6 +91,48 @@
       wdojunior at ciencias.ulisboa.pt
     </div>
 
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="modalTitle">🏆 Submeter Pontuação</h2>
+          <button type="button" class="modal-close" onclick="closeLeaderboardModal()" aria-label="Fechar">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-intro">Guarda o teu resultado no leaderboard da turma!</p>
+          <div class="modal-stats">
+            <div class="modal-stat">
+              <span class="modal-stat-value" id="modalScore">0</span>
+              <span class="modal-stat-label">pontos</span>
+            </div>
+            <div class="modal-stat">
+              <span class="modal-stat-value" id="modalCompleted">0</span>
+              <span class="modal-stat-label">concluídos</span>
+            </div>
+            <div class="modal-stat">
+              <span class="modal-stat-value" id="modalTime">00:00</span>
+              <span class="modal-stat-label">tempo</span>
+            </div>
+          </div>
+          <form id="leaderboardForm" onsubmit="submitToLeaderboard(event)">
+            <div class="form-group">
+              <label for="lbName">Nome</label>
+              <input id="lbName" type="text" placeholder="O teu nome" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="lbEmail">E-mail</label>
+              <input id="lbEmail" type="email" placeholder="o-teu-email@exemplo.com" required autocomplete="email">
+            </div>
+            <p id="lbFeedback" class="lb-feedback"></p>
+            <div class="modal-actions">
+              <button type="submit" class="modal-submit">Submeter pontuação</button>
+              <a href="leaderboard.html" target="_blank" class="modal-link-btn">Ver leaderboard</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script src="assets/exercises/01-fundamentos.js"></script>
     <script src="assets/exercises/02-numeros.js"></script>
     <script src="assets/exercises/03-ciclos.js"></script>
@@ -97,6 +140,7 @@
     <script src="assets/exercises/05-cifras-matematica.js"></script>
     <script src="assets/exercises/06-estruturas.js"></script>
     <script src="assets/exercises/07-interativo.js"></script>
+    <script src="assets/exercises/08-desafios.js"></script>
     <script src="assets/app/utils.js"></script>
     <script src="assets/app/curriculum.js"></script>
     <script src="assets/app/preview.js"></script>

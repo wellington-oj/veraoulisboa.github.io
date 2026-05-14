@@ -252,7 +252,7 @@ window.exerciseTopics.push({
     {
       id: 'semaforo-amarelo',
       title: 'Semáforo com amarelo',
-      points: 15,
+      points: 20,
       explanation: [
         'No exercício anterior havia duas decisões: avançar ou parar. Agora vamos ter três estados: verde, amarelo e vermelho.',
         'Quando há mais de duas possibilidades, podemos usar if, else if e else. O else if significa “se a primeira condição não aconteceu, testa esta outra”.',
@@ -313,7 +313,7 @@ window.exerciseTopics.push({
     {
       id: 'while',
       title: 'Perguntar até acertar',
-      points: 15,
+      points: 25,
       terminal: true,
       explanation: [
         'Um ciclo for é ótimo quando sabemos quantas vezes queremos repetir. Mas há situações em que não sabemos. Queremos continuar até acontecer alguma coisa.',

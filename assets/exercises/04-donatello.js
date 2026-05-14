@@ -254,7 +254,7 @@ window.exerciseTopics.push({
     {
       id: 'donatello-oito',
       title: 'Desenha um 8',
-      points: 25,
+      points: 30,
       explanation: [
         'O número 8 pode ser pensado como duas voltas. Para a primeira volta, a tartaruga roda numa direção. Para a segunda, roda na direção contrária.',
         'Este exercício mostra que mudar apenas uma instrução pode mudar muito o desenho final. right e left são parecidos, mas têm sentidos opostos.',
@@ -309,7 +309,7 @@ window.exerciseTopics.push({
     {
       id: 'donatello-oito-if',
       title: 'O 8 com um único ciclo',
-      points: 30,
+      points: 35,
       explanation: [
         'Agora o desafio é fazer o 8 com um único ciclo. Para isso, o ciclo continua a repetir, mas lá dentro existe uma decisão.',
         'Durante a primeira metade das repetições, a tartaruga roda para um lado. Durante a segunda metade, roda para o outro. Essa escolha é feita com if e else.',

@@ -228,6 +228,7 @@ window.exerciseTopics.push({
         function drawEdge(a, b) {
           const start = nodes[a];
           const end = nodes[b];
+          if (!start || !end) return;
           const dx = end.x - start.x;
           const dy = end.y - start.y;
           const line = document.createElement('div');
@@ -386,7 +387,7 @@ window.exerciseTopics.push({
     {
       id: 'rede-pesos',
       title: 'Rede com pesos',
-      points: 25,
+      points: 30,
       explanation: [
         'Nem todos os nós de uma rede precisam de ter a mesma importância. Numa rede social, uma pessoa com muitas ligações pode puxar mais atenção. Num mapa, uma cidade maior pode ter mais influência.',
         'Neste exercício, cada nó tem um peso. Quanto maior o peso, maior fica o nó e mais força ele exerce sobre os outros nós da rede.',
@@ -561,7 +562,7 @@ window.exerciseTopics.push({
     {
       id: 'arvore-procura',
       title: 'Procura numa lista e numa árvore',
-      points: 30,
+      points: 40,
       explanation: [
         'Procurar é uma tarefa muito comum. Imagina que tens muitos números e queres encontrar uma opção escolhida. Uma forma simples é ver a lista desde o início, um valor de cada vez.',
         'Essa procura linear funciona, mas pode ser lenta se a lista for grande. Uma árvore binária de procura organiza os valores: menores à esquerda, maiores à direita.',

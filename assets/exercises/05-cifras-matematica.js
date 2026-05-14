@@ -7,7 +7,7 @@ window.exerciseTopics.push({
     {
       id: 'cesar',
       title: 'Mensagem secreta',
-      points: 20,
+      points: 25,
       explanation: [
         'Uma cifra é uma forma de esconder uma mensagem. A ideia da cifra de César é trocar cada letra por outra letra mais à frente no alfabeto.',
         'No computador, cada letra tem um código numérico. Podemos ler esse código com charCodeAt e criar uma nova letra com String.fromCharCode.',
@@ -93,7 +93,7 @@ window.exerciseTopics.push({
     {
       id: 'formula',
       title: 'Raízes da equação',
-      points: 20,
+      points: 25,
       explanation: [
         'Algumas fórmulas parecem grandes, mas um programa pode dividi-las em passos pequenos. A fórmula resolvente encontra as soluções de uma equação do segundo grau.',
         'Para x² - 5x + 6 = 0, temos a = 1, b = -5 e c = 6. Primeiro calculamos delta. Depois usamos Math.sqrt(delta) para obter a raiz quadrada.',
@@ -246,7 +246,7 @@ window.exerciseTopics.push({
     {
       id: 'pi',
       title: 'Dardos para descobrir pi',
-      points: 20,
+      points: 30,
       explanation: [
         'Uma forma divertida de aproximar pi é lançar muitos pontos aleatórios para um quadrado e contar quantos ficam dentro de um quarto de círculo.',
         'O quadrado tem área 1. O quarto de círculo ocupa uma parte dessa área. A razão entre pontos dentro do círculo e pontos totais aproxima a razão entre as áreas.',

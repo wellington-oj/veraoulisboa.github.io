@@ -7,7 +7,7 @@ window.exerciseTopics.push({
     {
       id: 'intro',
       title: 'Bem-vindo ao laboratório de programação!',
-      points: 10,
+      points: 5,
       explanation: [
         'Hoje vão aprender a programar usando uma linguagem chamada TypeScript.',
         'Programar é, basicamente, dar instruções ao computador, como se estivéssemos a ensinar-lhe uma receita, passo a passo. Essas instruções formam programas.',

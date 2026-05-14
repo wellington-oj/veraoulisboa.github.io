@@ -35,6 +35,11 @@ window.Curriculum = (() => {
       title: 'Grafos, Redes e Procura',
       exercises: ['grafo-criar', 'grafo-caminho', 'rede-pesos', 'arvore-procura'],
     },
+    {
+      id: 'desafios',
+      title: 'Desafios de Programação',
+      exercises: ['arquiteto', 'mvp-futebol'],
+    },
   ];
 
   function build(sourceTopics = window.exerciseTopics || []) {

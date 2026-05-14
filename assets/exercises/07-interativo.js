@@ -7,7 +7,7 @@ window.exerciseTopics.push({
     {
       id: 'adivinhar-numero',
       title: 'Adivinhar o número',
-      points: 25,
+      points: 35,
       interactive: true,
       terminal: true,
       explanation: [
@@ -75,7 +75,7 @@ window.exerciseTopics.push({
     {
       id: 'calculadora-interativa',
       title: 'Calculadora com input',
-      points: 15,
+      points: 20,
       interactive: true,
       terminal: true,
       explanation: [
@@ -118,7 +118,7 @@ window.exerciseTopics.push({
     {
       id: 'cifra-interativa',
       title: 'Cifra a tua mensagem',
-      points: 20,
+      points: 25,
       interactive: true,
       terminal: true,
       explanation: [
@@ -170,7 +170,7 @@ window.exerciseTopics.push({
     {
       id: 'falar',
       title: 'Falar com o programa',
-      points: 10,
+      points: 15,
       interactive: true,
       terminal: true,
       explanation: [
@@ -185,7 +185,7 @@ window.exerciseTopics.push({
       observation: 'O cartão deve mostrar o nome e uma frase descritiva. O importante é perceber que a função recebe valores que preparaste antes.' +
         'Podes experimentar criar mais variáveis e concatená-las para criar mensagens mais complexas. Experimenta fazer const fraseCompleta = nome + " " + detalhe; e depois mostrar essa frase completa no cartão.',
       hint: 'Usa [await lerInput()] para guardar o nome e um detalhe em variáveis, e passa essas variáveis para criarCartao().',
-      starter: '//utilize a função [escrever("")] para mostrar mensagens no terminal;\nconst nome: string = await lerInput("Como te chamas?");\n//escreva um comando para pedir os detalhes do utilizador;\n\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
+      starter: '//utilize a função [escrever("")] para mostrar mensagens no terminal;\nconst nome: string = await lerInput("Como te chamas?");\nconst detalhe: string = ""; //escreve aqui como pedir os detalhes\n\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
       solution: 'escrever("Olá!");\nconst nome: string = await lerInput("Como te chamas?");\nconst detalhe: string = await lerInput("Escreve um detalhe sobre ti:");\n\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
       html: `
         <main class="stage">

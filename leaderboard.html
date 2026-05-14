@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — Verão ULisboa</title>
+  <meta name="description" content="Leaderboard do laboratório de programação Verão ULisboa. Vê as pontuações da turma.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      background: #f0f5fb;
+      color: #1f2937;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 18px 32px;
+      background: linear-gradient(135deg, #002b45 60%, #004f7c);
+      color: white;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 20px;
+    }
+
+    header img { width: 130px; max-width: 28vw; }
+
+    .header-text h1 { margin: 0 0 4px; font-size: clamp(18px, 3vw, 26px); }
+    .header-text p  { margin: 0; color: rgba(255,255,255,0.75); font-size: 14px; }
+
+    .back-link {
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.14);
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .back-link:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 36px 20px 48px;
+      display: grid;
+      gap: 32px;
+    }
+
+    /* ── Hero stats ── */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 20px 16px;
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 2px 12px rgba(0,43,69,0.08);
+      text-align: center;
+      display: grid;
+      gap: 6px;
+    }
+
+    .stat-card-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0077b6;
+      line-height: 1;
+    }
+
+    .stat-card-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #66758a;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      margin: 0 0 16px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #002b45;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Leaderboard table ── */
+    .lb-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,43,69,0.09);
+      overflow: hidden;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .lb-table thead tr {
+      background: #002b45;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .lb-table th {
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: left;
+    }
+
+    .lb-table th:last-child,
+    .lb-table td:last-child { text-align: right; }
+
+    .lb-table tbody tr {
+      border-bottom: 1px solid #e8f0f8;
+      transition: background 0.12s;
+    }
+
+    .lb-table tbody tr:last-child { border-bottom: none; }
+    .lb-table tbody tr:hover { background: #f5f9ff; }
+
+    .lb-table td {
+      padding: 14px 16px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+
+    .rank-cell {
+      width: 52px;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .name-cell strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .name-cell small {
+      font-size: 12px;
+      color: #66758a;
+    }
+
+    .score-cell {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0077b6;
+      text-align: right;
+    }
+
+    .completed-cell {
+      font-size: 14px;
+      font-weight: 700;
+      color: #42526b;
+      text-align: right;
+    }
+
+    .time-cell {
+      font-size: 13px;
+      color: #66758a;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      text-align: right;
+    }
+
+    /* Highlight top 3 */
+    .lb-table tbody tr:nth-child(1) { background: #fffbeb; }
+    .lb-table tbody tr:nth-child(2) { background: #f8fafc; }
+    .lb-table tbody tr:nth-child(3) { background: #fef7f0; }
+
+    .lb-table tbody tr:nth-child(1):hover { background: #fef3c7; }
+    .lb-table tbody tr:nth-child(2):hover { background: #f0f5fb; }
+    .lb-table tbody tr:nth-child(3):hover { background: #fde8d5; }
+
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: #66758a;
+    }
+
+    .empty-state p { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+    .empty-state small { font-size: 14px; }
+
+    /* ── Submit form ── */
+    .submit-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,43,69,0.09);
+      overflow: hidden;
+    }
+
+    .submit-card-header {
+      padding: 18px 24px;
+      background: linear-gradient(135deg, #0077b6, #004f7c);
+      color: white;
+    }
+
+    .submit-card-header h2 { margin: 0; font-size: 18px; }
+    .submit-card-header p  { margin: 6px 0 0; font-size: 14px; color: rgba(255,255,255,0.8); }
+
+    .submit-form {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .fg {
+      display: grid;
+      gap: 6px;
+    }
+
+    .fg label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1f2937;
+    }
+
+    .fg input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d1dae7;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      color: #1f2937;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .fg input:focus {
+      border-color: #0077b6;
+      box-shadow: 0 0 0 3px rgba(0,119,182,0.15);
+    }
+
+    .fg input[readonly] {
+      background: #f0f5fb;
+      color: #42526b;
+    }
+
+    .submit-note {
+      font-size: 13px;
+      color: #66758a;
+      margin: 0;
+    }
+
+    .submit-btn {
+      min-height: 44px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #0077b6, #005f92);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      justify-self: start;
+    }
+
+    .submit-btn:hover { background: linear-gradient(135deg, #0090d9, #0077b6); transform: translateY(-1px); }
+
+    #formFeedback {
+      min-height: 1.4em;
+      font-size: 14px;
+      font-weight: 700;
+      color: #157347;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 12px 20px;
+      text-align: center;
+      background: #002b45;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+    }
+
+    footer a { color: #60a5fa; }
+
+    @media (max-width: 640px) {
+      header { grid-template-columns: 1fr auto; }
+      header img { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .lb-table th:nth-child(4),
+      .lb-table td:nth-child(4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="https://ciencias.ulisboa.pt/sites/default/files/Ciencias_Logo_Azul-02.png" alt="Logo FCUL">
+  <div class="header-text">
+    <h1>🏆 Leaderboard</h1>
+    <p>Verão ULisboa — Laboratório de Programação</p>
+  </div>
+  <a href="index.html" class="back-link">← Voltar aos exercícios</a>
+</header>
+
+<main>
+  <!-- Summary stats -->
+  <div class="hero-stats" id="heroStats">
+    <div class="stat-card">
+      <span class="stat-card-value" id="statParticipants">0</span>
+      <span class="stat-card-label">Participantes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-value" id="statTopScore">—</span>
+      <span class="stat-card-label">Melhor Pontuação</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-value" id="statAvgScore">—</span>
+      <span class="stat-card-label">Média de Pontos</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-value" id="statTopCompleted">—</span>
+      <span class="stat-card-label">Mais Exercícios</span>
+    </div>
+  </div>
+
+  <!-- Ranking table -->
+  <div>
+    <p class="section-title">📊 Classificação</p>
+    <div class="lb-card" id="lbCard">
+      <div class="empty-state" id="emptyState">
+        <p>Ainda não há pontuações.</p>
+        <small>Sê o primeiro a submeter a tua pontuação!</small>
+      </div>
+      <table class="lb-table" id="lbTable" hidden>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Exercícios</th>
+            <th>Tempo</th>
+            <th>Pontuação</th>
+          </tr>
+        </thead>
+        <tbody id="lbBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Submit form -->
+  <div class="submit-card">
+    <div class="submit-card-header">
+      <h2>Submeter Pontuação</h2>
+      <p>A tua pontuação é carregada automaticamente do browser.</p>
+    </div>
+    <form class="submit-form" id="submitForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-row">
+        <div class="fg">
+          <label for="sbName">Nome</label>
+          <input id="sbName" type="text" placeholder="O teu nome" required autocomplete="name">
+        </div>
+        <div class="fg">
+          <label for="sbEmail">E-mail</label>
+          <input id="sbEmail" type="email" placeholder="o-teu-email@exemplo.com" required autocomplete="email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label for="sbScore">Pontuação</label>
+          <input id="sbScore" type="text" readonly>
+        </div>
+        <div class="fg">
+          <label for="sbCompleted">Exercícios concluídos</label>
+          <input id="sbCompleted" type="text" readonly>
+        </div>
+      </div>
+      <p class="submit-note">Apenas a tua melhor pontuação é guardada. Dados armazenados localmente neste browser.</p>
+      <p id="formFeedback"></p>
+      <button type="submit" class="submit-btn">Guardar no leaderboard</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 Verão ULisboa @ FCUL &mdash;
+  <a href="index.html">Laboratório de Programação</a> &mdash;
+  wdojunior at ciencias.ulisboa.pt
+</footer>
+
+<script>
+  const LEADERBOARD_KEY = 'veraoProgramacaoLeaderboard:v1';
+  const APP_KEY = 'veraoProgramacaoLab:v4';
+
+  const MEDALS = ['🥇', '🥈', '🥉'];
+
+  function loadEntries() {
+    try { return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveEntries(entries) {
+    entries.sort((a, b) => b.score - a.score);
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(entries));
+  }
+
+  function loadAppState() {
+    try { return JSON.parse(localStorage.getItem(APP_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function formatTime(seconds) {
+    const m = String(Math.floor((seconds || 0) / 60)).padStart(2, '0');
+    const s = String((seconds || 0) % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  function renderLeaderboard() {
+    const entries = loadEntries();
+    const table  = document.getElementById('lbTable');
+    const body   = document.getElementById('lbBody');
+    const empty  = document.getElementById('emptyState');
+
+    // Stats
+    document.getElementById('statParticipants').textContent = entries.length;
+    if (entries.length) {
+      document.getElementById('statTopScore').textContent = entries[0].score;
+      const avg = Math.round(entries.reduce((s, e) => s + e.score, 0) / entries.length);
+      document.getElementById('statAvgScore').textContent = avg;
+      const maxDone = Math.max(...entries.map(e => e.completed || 0));
+      document.getElementById('statTopCompleted').textContent = maxDone;
+    }
+
+    if (!entries.length) {
+      empty.hidden = false;
+      table.hidden = true;
+      return;
+    }
+
+    empty.hidden = true;
+    table.hidden = false;
+    body.innerHTML = entries.map((e, i) => {
+      const medal = MEDALS[i] || (i + 1);
+      const dateStr = e.submittedAt
+        ? new Date(e.submittedAt).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' })
+        : '';
+      const email = e.email
+        ? e.email.replace(/(.{2}).*(@.*)/, '$1…$2')
+        : '';
+      return `<tr>
+        <td class="rank-cell">${medal}</td>
+        <td class="name-cell">
+          <strong>${escHtml(e.name)}</strong>
+          <small>${escHtml(email)}${dateStr ? ' · ' + dateStr : ''}</small>
+        </td>
+        <td class="completed-cell">${e.completed || 0}/${e.total || '?'}</td>
+        <td class="time-cell">${formatTime(e.timeSpent)}</td>
+        <td class="score-cell">${e.score}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function prefillForm() {
+    const app = loadAppState();
+    const score     = app.score ?? 0;
+    const completed = app.completed ? Object.keys(app.completed).length : 0;
+    document.getElementById('sbScore').value     = score + ' pontos';
+    document.getElementById('sbCompleted').value = completed + ' exercícios';
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    const name  = document.getElementById('sbName').value.trim();
+    const email = document.getElementById('sbEmail').value.trim();
+    if (!name || !email) return;
+
+    const app = loadAppState();
+    const entry = {
+      name,
+      email,
+      score: app.score ?? 0,
+      completed: app.completed ? Object.keys(app.completed).length : 0,
+      total: app.completed ? Object.keys(app.completed).length : 0,
+      timeSpent: app.timeSpent ?? 0,
+      submittedAt: new Date().toISOString(),
+    };
+
+    const entries = loadEntries();
+    const existing = entries.findIndex(e => e.email === email);
+    if (existing >= 0) {
+      if (entry.score >= entries[existing].score) {
+        entries[existing] = entry;
+        document.getElementById('formFeedback').textContent = '✓ Pontuação atualizada!';
+      } else {
+        document.getElementById('formFeedback').textContent =
+          '⚠ A tua pontuação anterior era maior (' + entries[existing].score + ' pts). Mantida.';
+      }
+    } else {
+      entries.push(entry);
+      document.getElementById('formFeedback').textContent = '✓ Pontuação guardada!';
+    }
+
+    saveEntries(entries);
+    renderLeaderboard();
+    document.getElementById('sbName').value = '';
+    document.getElementById('sbEmail').value = '';
+  }
+
+  // Init
+  renderLeaderboard();
+  prefillForm();
+</script>
+</body>
+</html>
