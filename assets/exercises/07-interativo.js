@@ -9,6 +9,7 @@ window.exerciseTopics.push({
       title: 'Adivinhar o número',
       points: 25,
       interactive: true,
+      terminal: true,
       explanation: [
         'Este exercício é um jogo. O computador escolhe um número secreto e tu tens de adivinhar. Em cada tentativa, recebes uma dica: "muito alto" ou "muito baixo".',
         'No terminal original, este tipo de jogo usava o teclado diretamente. Aqui, a função lerInput faz o mesmo: o programa pára e espera que escrevas algo no terminal abaixo do painel.',
@@ -76,6 +77,7 @@ window.exerciseTopics.push({
       title: 'Calculadora com input',
       points: 15,
       interactive: true,
+      terminal: true,
       explanation: [
         'Até agora, os números estavam escritos diretamente no código. Mas um programa de verdade recebe dados de quem o usa.',
         'A função lerInput devolve sempre texto. Para fazer contas, precisamos de converter esse texto num número com Number().',
@@ -118,6 +120,7 @@ window.exerciseTopics.push({
       title: 'Cifra a tua mensagem',
       points: 20,
       interactive: true,
+      terminal: true,
       explanation: [
         'No exercício da cifra de César, o texto a cifrar estava fixo no código. Agora vais pedir ao utilizador que escreva a sua própria mensagem.',
         'A função cifrar percorre cada letra e avança-a 13 posições na tabela de caracteres. Desta vez, a função já está pronta — o desafio é ligar a interação ao código.',
@@ -163,6 +166,75 @@ window.exerciseTopics.push({
         state.cipher.length >= 1 &&
         state.original &&
         state.cipher !== state.original,
+    },
+    {
+      id: 'falar',
+      title: 'Falar com o programa',
+      points: 10,
+      interactive: true,
+      terminal: true,
+      explanation: [
+        'Até agora, o programa tem mostrado coisas no ecrã, mas não tem recebido nenhuma informação de volta. E se quisermos que o programa saiba o nosso nome para nos cumprimentar? Ou que peça a nossa cor favorita para mudar a cor do painel?',
+        'Para isso, precisamos de dar ao programa a capacidade de receber input. No terminal que aparece na parte inferior, podemos pedir ao utilizador para escrever algo. O programa pode então usar essa informação para fazer coisas diferentes.',
+      ],
+      instructions: [
+        'Usa [await lerInput()] para pedir ao utilizador que escreva algo.',
+        'Quando o utilizador submeter o input, guarda-o numa variável e mostra um cartão personalizado usando esse input.',
+        'Experimenta utilizar a função [escrever("")] para mostrar mensagens no terminal',
+      ],
+      observation: 'O cartão deve mostrar o nome e uma frase descritiva. O importante é perceber que a função recebe valores que preparaste antes.' +
+        'Podes experimentar criar mais variáveis e concatená-las para criar mensagens mais complexas. Experimenta fazer const fraseCompleta = nome + " " + detalhe; e depois mostrar essa frase completa no cartão.',
+      hint: 'Usa [await lerInput()] para guardar o nome e um detalhe em variáveis, e passa essas variáveis para criarCartao().',
+      starter: '//utilize a função [escrever("")] para mostrar mensagens no terminal;\nconst nome: string = await lerInput("Como te chamas?");\n//escreva um comando para pedir os detalhes do utilizador;\n\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
+      solution: 'escrever("Olá!");\nconst nome: string = await lerInput("Como te chamas?");\nconst detalhe: string = await lerInput("Escreve um detalhe sobre ti:");\n\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
+      html: `
+        <main class="stage">
+          <section class="panel">
+            <p>Cartão</p>
+            <h1 id="name">Nome</h1>
+            <p id="detail">Detalhe</p>
+          </section>
+        </main>
+      `,
+      api: `
+        function criarCartao(nome, detalhe) {
+          const safeName = String(nome).trim();
+          const safeDetail = String(detalhe).trim();
+          setText('name', safeName || 'Nome');
+          setText('detail', safeDetail || 'Detalhe');
+          window.exerciseState.name = safeName;
+          window.exerciseState.detail = safeDetail;
+        }
+        function mudarCorCartao(cor) {
+          document.querySelector('.panel').style.background = String(cor);
+          window.exerciseState.cardColor = String(cor);
+        }
+        function mudarTamanhoNome(tamanho) {
+          const size = Number(tamanho);
+          document.getElementById('name').style.fontSize = size + 'px';
+          window.exerciseState.nameSize = size;
+        }
+      `,
+      visualControls: [
+        {
+          label: 'Cor do cartão',
+          type: 'color',
+          defaultValue: '#ffffff',
+          pattern: 'mudarCorCartao\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorCartao("${value}");`,
+        },
+        {
+          label: 'Tamanho do nome',
+          type: 'range',
+          min: 30,
+          max: 76,
+          step: 2,
+          defaultValue: 48,
+          pattern: 'mudarTamanhoNome\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoNome(${value});`,
+        },
+      ],
+      validate: (code, state) => /lerInput/.test(code) && /:\s*string/.test(code) && state.name?.length >= 2 && state.detail?.length >= 5,
     },
   ],
 });

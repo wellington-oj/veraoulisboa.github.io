@@ -17,11 +17,12 @@ window.exerciseTopics.push({
         'Cria uma lista com pelo menos 3 frutas.',
         'Usa um ciclo for.',
         'Dentro do ciclo, chama adicionarFruta(fruta).',
+        'Muda a cor e o tamanho das etiquetas para veres essas escolhas no código.',
       ],
       observation: 'Cada elemento da lista deve aparecer como uma etiqueta no painel.',
       hint: 'Cria a lista primeiro. Depois usa um ciclo for...of para passar por cada fruta e chama adicionarFruta dentro do ciclo.',
-      starter: 'const frutas: string[] = [];\n\n// cria o ciclo aqui',
-      solution: 'const frutas: string[] = ["maçã", "banana", "kiwi"];\n\nfor (const fruta of frutas) {\n  adicionarFruta(fruta);\n}',
+      starter: 'const frutas: string[] = [];\n\n// cria o ciclo aqui\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
+      solution: 'const frutas: string[] = ["maçã", "banana", "kiwi"];\n\nfor (const fruta of frutas) {\n  adicionarFruta(fruta);\n}\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -52,7 +53,35 @@ window.exerciseTopics.push({
           document.getElementById('fruits').appendChild(li);
           window.exerciseState.fruits = [...(window.exerciseState.fruits || []), text];
         }
+        function mudarCorEtiquetas(cor) {
+          document.querySelectorAll('#fruits li').forEach((item) => item.style.background = String(cor));
+          window.exerciseState.tagColor = String(cor);
+        }
+        function mudarTamanhoEtiquetas(tamanho) {
+          const size = Number(tamanho);
+          document.querySelectorAll('#fruits li').forEach((item) => item.style.fontSize = size + 'px');
+          window.exerciseState.tagSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Cor das etiquetas',
+          type: 'color',
+          defaultValue: '#e8eef7',
+          pattern: 'mudarCorEtiquetas\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorEtiquetas("${value}");`,
+        },
+        {
+          label: 'Tamanho das etiquetas',
+          type: 'range',
+          min: 12,
+          max: 26,
+          step: 1,
+          defaultValue: 16,
+          pattern: 'mudarTamanhoEtiquetas\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoEtiquetas(${value});`,
+        },
+      ],
       validate: (code, state) => /\bfor\s*\(/.test(code) && (state.fruits || []).length >= 3,
     },
     {
@@ -68,11 +97,12 @@ window.exerciseTopics.push({
         'Usa numeroAleatorio(1, 6) para gerar o valor do dado.',
         'Guarda esse valor numa variável do tipo number.',
         'Mostra esse valor com mostrarDado.',
+        'Muda a cor e o tamanho do dado para perceberes como o estilo também pode vir do código.',
       ],
       observation: 'Se executares várias vezes, o número pode mudar. Isso é esperado.',
       hint: 'Usa numeroAleatorio com mínimo 1 e máximo 6. Guarda o resultado numa variável antes de o mostrar.',
-      starter: '// cria a variável dado aqui\n// depois mostra o valor',
-      solution: 'const dado: number = numeroAleatorio(1, 6);\nmostrarDado(dado);',
+      starter: '// cria a variável dado aqui\n// depois mostra o valor\n\nmudarCorDado("#0077b6");\nmudarTamanhoDado(78);',
+      solution: 'const dado: number = numeroAleatorio(1, 6);\nmostrarDado(dado);\nmudarCorDado("#0077b6");\nmudarTamanhoDado(78);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -92,7 +122,35 @@ window.exerciseTopics.push({
           setText('die', die);
           window.exerciseState.die = die;
         }
+        function mudarCorDado(cor) {
+          document.getElementById('die').style.color = String(cor);
+          window.exerciseState.dieColor = String(cor);
+        }
+        function mudarTamanhoDado(tamanho) {
+          const size = Number(tamanho);
+          document.getElementById('die').style.fontSize = size + 'px';
+          window.exerciseState.dieSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Cor do dado',
+          type: 'color',
+          defaultValue: '#0077b6',
+          pattern: 'mudarCorDado\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorDado("${value}");`,
+        },
+        {
+          label: 'Tamanho do dado',
+          type: 'range',
+          min: 42,
+          max: 108,
+          step: 2,
+          defaultValue: 78,
+          pattern: 'mudarTamanhoDado\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoDado(${value});`,
+        },
+      ],
       validate: (code, state) => /numeroAleatorio\s*\(\s*1\s*,\s*6\s*\)/.test(code) && state.die >= 1 && state.die <= 6,
     },
     {
@@ -108,11 +166,12 @@ window.exerciseTopics.push({
         'Cria uma variável podeAvancar do tipo boolean.',
         'Usa if e else.',
         'Liga verde quando podeAvancar for true; caso contrário liga vermelho.',
+        'Ajusta o tamanho das luzes e observa a chamada de função que aparece no código.',
       ],
       observation: 'Muda true para false e executa outra vez para veres o outro ramo do if.',
       hint: 'Começa por criar a variável booleana. Depois usa if para o caso verdadeiro e else para o caso falso.',
-      starter: 'const podeAvancar: boolean = true;\n\n// escreve a decisão aqui',
-      solution: 'const podeAvancar: boolean = true;\n\nif (podeAvancar) {\n  ligarSemaforo("verde");\n} else {\n  ligarSemaforo("vermelho");\n}',
+      starter: 'const podeAvancar: boolean = true;\n\n// escreve a decisão aqui\n\nmudarTamanhoLuzes(88);',
+      solution: 'const podeAvancar: boolean = true;\n\nif (podeAvancar) {\n  ligarSemaforo("verde");\n} else {\n  ligarSemaforo("vermelho");\n}\n\nmudarTamanhoLuzes(88);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -134,7 +193,24 @@ window.exerciseTopics.push({
           if (target) target.classList.add('on');
           window.exerciseState.color = normalized;
         }
+        function mudarTamanhoLuzes(tamanho) {
+          const size = Number(tamanho);
+          document.querySelectorAll('.light').forEach((light) => light.style.width = size + 'px');
+          window.exerciseState.lightSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Tamanho das luzes',
+          type: 'range',
+          min: 48,
+          max: 116,
+          step: 4,
+          defaultValue: 88,
+          pattern: 'mudarTamanhoLuzes\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoLuzes(${value});`,
+        },
+      ],
       validate: (code, state) => /:\s*boolean/.test(code) && /\bif\s*\(/.test(code) && ['verde', 'vermelho'].includes(state.color),
     },
     {
@@ -187,11 +263,12 @@ window.exerciseTopics.push({
         'Se estado for "avançar", liga verde.',
         'Se estado for "atenção", liga amarelo.',
         'Caso contrário, liga vermelho.',
+        'Experimenta mudar o tamanho das luzes depois da decisão.',
       ],
       observation: 'O amarelo deve acender quando estado for "atenção".',
       hint: 'Usa três ramos: if para avançar, else if para atenção, e else para todos os outros casos.',
-      starter: 'const estado: string = "atenção";\n\n// escreve a decisão com if, else if e else',
-      solution: 'const estado: string = "atenção";\n\nif (estado === "avançar") {\n  ligarSemaforo("verde");\n} else if (estado === "atenção") {\n  ligarSemaforo("amarelo");\n} else {\n  ligarSemaforo("vermelho");\n}',
+      starter: 'const estado: string = "atenção";\n\n// escreve a decisão com if, else if e else\n\nmudarTamanhoLuzes(88);',
+      solution: 'const estado: string = "atenção";\n\nif (estado === "avançar") {\n  ligarSemaforo("verde");\n} else if (estado === "atenção") {\n  ligarSemaforo("amarelo");\n} else {\n  ligarSemaforo("vermelho");\n}\n\nmudarTamanhoLuzes(88);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -213,27 +290,46 @@ window.exerciseTopics.push({
           if (target) target.classList.add('on');
           window.exerciseState.color = normalized;
         }
+        function mudarTamanhoLuzes(tamanho) {
+          const size = Number(tamanho);
+          document.querySelectorAll('.light').forEach((light) => light.style.width = size + 'px');
+          window.exerciseState.lightSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Tamanho das luzes',
+          type: 'range',
+          min: 48,
+          max: 116,
+          step: 4,
+          defaultValue: 88,
+          pattern: 'mudarTamanhoLuzes\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoLuzes(${value});`,
+        },
+      ],
       validate: (code, state) => /else\s+if/.test(code) && state.color === 'amarelo',
     },
     {
       id: 'while',
       title: 'Perguntar até acertar',
       points: 15,
+      terminal: true,
       explanation: [
         'Um ciclo for é ótimo quando sabemos quantas vezes queremos repetir. Mas há situações em que não sabemos. Queremos continuar até acontecer alguma coisa.',
         'Para isso usamos while. Lê-se “enquanto”. Enquanto a condição for verdadeira, o bloco repete. Quando a condição deixa de ser verdadeira, o ciclo termina.',
-        'Neste exercício, a função perguntar devolve primeiro "nao", depois "talvez" e só depois "sim". O teu programa deve continuar até chegar ao "sim".',
+        'Neste exercício, o programa pergunta no terminal se a pessoa está pronta. Enquanto a resposta não for "sim", deve continuar a perguntar.',
       ],
       instructions: [
         'Usa um ciclo while.',
-        'Chama perguntar() até receberes "sim".',
+        'Dentro do ciclo, usa await lerInput("...") para pedir uma resposta no terminal.',
+        'Continua a perguntar enquanto a resposta for diferente de "sim".',
         'Depois chama concluir().',
       ],
-      observation: 'Deves ver três respostas aparecerem antes da mensagem final.',
-      hint: 'A variável resposta começa vazia. Dentro do while, atualiza resposta chamando perguntar(). Fora do ciclo, conclui.',
+      observation: 'Escreve respostas diferentes de "sim" no terminal. O programa só termina quando escreveres exatamente "sim".',
+      hint: 'A variável resposta começa vazia. Dentro do while, atualiza resposta com await lerInput(...). Fora do ciclo, conclui.',
       starter: 'let resposta: string = "";\n\n// escreve o while aqui\n\n// quando terminar, chama concluir',
-      solution: 'let resposta: string = "";\n\nwhile (resposta !== "sim") {\n  resposta = perguntar();\n}\n\nconcluir();',
+      solution: 'let resposta: string = "";\n\nwhile (resposta !== "sim") {\n  resposta = await lerInput("Estás pronto? Escreve sim para continuar.");\n}\n\nconcluir();',
       html: `
         <main class="stage">
           <section class="panel">
@@ -244,24 +340,22 @@ window.exerciseTopics.push({
         </main>
       `,
       api: `
-        const answers = ['nao', 'talvez', 'sim'];
-        let answerIndex = 0;
         window.exerciseState.questions = 0;
-        function perguntar() {
-          const answer = answers[Math.min(answerIndex, answers.length - 1)];
-          answerIndex++;
+        const _origLerInputWhile = lerInput;
+        lerInput = async function(mensagem) {
+          const answer = await _origLerInputWhile(mensagem);
           window.exerciseState.questions++;
           const li = document.createElement('li');
           li.textContent = answer;
           document.getElementById('answers').appendChild(li);
           return answer;
-        }
+        };
         function concluir() {
           setText('done', 'Pronto para avançar.');
           window.exerciseState.done = true;
         }
       `,
-      validate: (code, state) => /\bwhile\s*\(/.test(code) && state.done === true && state.questions >= 3,
+      validate: (code, state) => /\bwhile\s*\(/.test(code) && /lerInput/.test(code) && state.done === true && state.questions >= 1,
     },
   ],
 });

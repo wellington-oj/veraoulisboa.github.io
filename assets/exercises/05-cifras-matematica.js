@@ -18,11 +18,12 @@ window.exerciseTopics.push({
         'Percorre todas as letras do texto.',
         'Avança cada letra 13 posições.',
         'Usa mostrarCifra(cifrar("FCUL")).',
+        'Muda a cor da mensagem cifrada para separar conteúdo e apresentação.',
       ],
       observation: 'O painel deve mostrar SPHY.',
       hint: 'Dentro do ciclo, transforma cada letra num código numérico, soma 13, e volta a transformar esse número numa letra.',
-      starter: 'function cifrar(texto: string): string {\n  let resultado = "";\n\n  // percorre as letras aqui\n\n  return resultado;\n}\n\nmostrarCifra(cifrar("FCUL"));',
-      solution: 'function cifrar(texto: string): string {\n  let resultado = "";\n\n  for (const letra of texto) {\n    resultado += String.fromCharCode(letra.charCodeAt(0) + 13);\n  }\n\n  return resultado;\n}\n\nmostrarCifra(cifrar("FCUL"));',
+      starter: 'function cifrar(texto: string): string {\n  let resultado = "";\n\n  // percorre as letras aqui\n\n  return resultado;\n}\n\nmostrarCifra(cifrar("FCUL"));\nmudarCorCifra("#ffffff");',
+      solution: 'function cifrar(texto: string): string {\n  let resultado = "";\n\n  for (const letra of texto) {\n    resultado += String.fromCharCode(letra.charCodeAt(0) + 13);\n  }\n\n  return resultado;\n}\n\nmostrarCifra(cifrar("FCUL"));\nmudarCorCifra("#ffffff");',
       html: `
         <main class="stage">
           <section class="panel dark">
@@ -37,7 +38,20 @@ window.exerciseTopics.push({
           setText('cipher', cipher);
           window.exerciseState.cipher = cipher;
         }
+        function mudarCorCifra(cor) {
+          document.getElementById('cipher').style.color = String(cor);
+          window.exerciseState.cipherColor = String(cor);
+        }
       `,
+      visualControls: [
+        {
+          label: 'Cor da cifra',
+          type: 'color',
+          defaultValue: '#ffffff',
+          pattern: 'mudarCorCifra\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorCifra("${value}");`,
+        },
+      ],
       validate: (code, state) => state.cipher === 'SPHY',
     },
     {
@@ -140,16 +154,18 @@ window.exerciseTopics.push({
       explanation: [
         'Para aproximar pi com dardos, começamos por imaginar um quadrado. Cada dardo cai numa posição dentro desse quadrado.',
         'A posição é descrita por duas coordenadas: x na horizontal e y na vertical. Math.random() dá um número entre 0 e 1, perfeito para escolher posições dentro de um quadrado de lado 1.',
-        'Antes de contar muitos dardos, vamos só desenhar um ponto para perceber o que x e y significam.',
+        'Antes de contar muitos dardos, vamos desenhar pontos para perceber o que x e y significam. A função criarPonto cria um novo ponto de cada vez.',
       ],
       instructions: [
         'Cria x e y usando Math.random().',
-        'Chama mostrarPonto(x, y).',
+        'Chama criarPonto(x, y).',
+        'Se quiseres, chama criarPonto várias vezes para desenhar vários pontos.',
+        'Experimenta mudar a cor e o raio dos pontos.',
       ],
-      observation: 'O ponto deve aparecer dentro do quadrado. Ao executar de novo, aparece noutra posição.',
-      hint: 'Math.random() cria um número entre 0 e 1. Usa essa ideia uma vez para x e outra para y.',
-      starter: '// cria x e y com Math.random\n\n// mostra o ponto aqui',
-      solution: 'const x: number = Math.random();\nconst y: number = Math.random();\nmostrarPonto(x, y);',
+      observation: 'Cada chamada a criarPonto desenha mais um ponto dentro do quadrado.',
+      hint: 'Math.random() cria um número entre 0 e 1. Usa essa ideia uma vez para x e outra para y, depois passa os dois valores a criarPonto.',
+      starter: '// cria x e y com Math.random\n\n// cria o ponto aqui\n\nmudarCorPonto("#d97706");\nmudarRaioPonto(7);',
+      solution: 'const x: number = Math.random();\nconst y: number = Math.random();\ncriarPonto(x, y);\nmudarCorPonto("#d97706");\nmudarRaioPonto(7);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -161,23 +177,71 @@ window.exerciseTopics.push({
       api: `
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        ctx.strokeStyle = '#0077b6';
-        ctx.strokeRect(80, 30, 300, 300);
-        ctx.beginPath();
-        ctx.arc(80, 330, 300, -Math.PI / 2, 0);
-        ctx.stroke();
-        function mostrarPonto(x, y) {
+        const points = [];
+        let pointColor = '#d97706';
+        let pointRadius = 7;
+        window.exerciseState.points = [];
+        function drawBoard() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = '#0077b6';
+          ctx.strokeRect(80, 30, 300, 300);
+          ctx.beginPath();
+          ctx.arc(80, 330, 300, -Math.PI / 2, 0);
+          ctx.stroke();
+        }
+        function redrawPoints() {
+          drawBoard();
+          ctx.fillStyle = pointColor;
+          for (const point of points) {
+            ctx.beginPath();
+            ctx.arc(80 + point.x * 300, 330 - point.y * 300, pointRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        drawBoard();
+        function criarPonto(x, y) {
           const px = Number(x);
           const py = Number(y);
-          ctx.fillStyle = '#d97706';
-          ctx.beginPath();
-          ctx.arc(80 + px * 300, 330 - py * 300, 7, 0, Math.PI * 2);
-          ctx.fill();
+          points.push({ x: px, y: py });
+          redrawPoints();
           window.exerciseState.x = px;
           window.exerciseState.y = py;
+          window.exerciseState.points.push({ x: px, y: py });
+        }
+        function mostrarPonto(x, y) {
+          criarPonto(x, y);
+        }
+        function mudarCorPonto(cor) {
+          pointColor = String(cor);
+          redrawPoints();
+          window.exerciseState.pointColor = pointColor;
+        }
+        function mudarRaioPonto(raio) {
+          pointRadius = Number(raio);
+          redrawPoints();
+          window.exerciseState.pointRadius = pointRadius;
         }
       `,
-      validate: (code, state) => /Math\.random/.test(code) && state.x >= 0 && state.x <= 1 && state.y >= 0 && state.y <= 1,
+      visualControls: [
+        {
+          label: 'Cor do ponto',
+          type: 'color',
+          defaultValue: '#d97706',
+          pattern: 'mudarCorPonto\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorPonto("${value}");`,
+        },
+        {
+          label: 'Raio do ponto',
+          type: 'range',
+          min: 3,
+          max: 18,
+          step: 1,
+          defaultValue: 7,
+          pattern: 'mudarRaioPonto\\((\\d+)\\);?',
+          template: (value) => `mudarRaioPonto(${value});`,
+        },
+      ],
+      validate: (code, state) => /Math\.random/.test(code) && /criarPonto/.test(code) && (state.points || []).some((point) => point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1),
     },
     {
       id: 'pi',
@@ -186,37 +250,61 @@ window.exerciseTopics.push({
       explanation: [
         'Uma forma divertida de aproximar pi é lançar muitos pontos aleatórios para um quadrado e contar quantos ficam dentro de um quarto de círculo.',
         'O quadrado tem área 1. O quarto de círculo ocupa uma parte dessa área. A razão entre pontos dentro do círculo e pontos totais aproxima a razão entre as áreas.',
-        'Quando multiplicamos essa razão por 4, obtemos uma aproximação de pi. Quanto mais dardos usarmos, mais estável tende a ficar o resultado.',
+        'Na pergunta anterior criaste um ponto com x e y. Agora vais repetir essa ideia muitas vezes: cada ponto é um dardo. Quando multiplicamos a razão de pontos dentro por 4, obtemos uma aproximação de pi.',
       ],
       instructions: [
-        'Usa estimarPi(total) com pelo menos 1000 dardos.',
-        'Guarda o resultado numa variável pi.',
+        'Cria total com pelo menos 1000 dardos.',
+        'Cria uma variável dentro que começa em 0.',
+        'Usa um ciclo for para gerar x e y com Math.random().',
+        'Dentro do ciclo, chama criarPonto(x, y).',
+        'Se pontoDentro(x, y) for true, aumenta dentro.',
+        'Calcula pi com 4 * dentro / total.',
         'Mostra o valor com mostrarPi(pi).',
+        'Altera a cor da barra para veres um detalhe gráfico controlado por código.',
       ],
-      observation: 'O valor não será sempre igual. Deve ficar perto de 3.14.',
-      hint: 'Escolhe um total grande, usa estimarPi(total), guarda o valor numa variável e mostra essa variável.',
-      starter: 'const total: number = 0;\nconst pi: number = 0;\nmostrarPi(pi);',
-      solution: 'const total: number = 5000;\nconst pi: number = estimarPi(total);\nmostrarPi(pi);',
+      observation: 'Deves ver muitos pontos no quadrado. O valor não será sempre igual, mas deve ficar perto de 3.14.',
+      hint: 'Este exercício é a pergunta 20 dentro de um ciclo. Para cada dardo, cria x e y, desenha o ponto, testa se está dentro, e só no fim calcula pi.',
+      starter: 'const total: number = 0;\nlet dentro: number = 0;\n\n// cria um ciclo para lançar os dardos\n\nconst pi: number = 0;\nmostrarPi(pi);\nmudarCorBarra("#0077b6");',
+      solution: 'const total: number = 5000;\nlet dentro: number = 0;\n\nfor (let i = 0; i < total; i++) {\n  const x: number = Math.random();\n  const y: number = Math.random();\n  criarPonto(x, y);\n\n  if (pontoDentro(x, y)) {\n    dentro = dentro + 1;\n  }\n}\n\nconst pi: number = 4 * dentro / total;\nmostrarPi(pi);\nmudarCorBarra("#0077b6");',
       html: `
         <main class="stage">
           <section class="panel">
             <h1>Pi aproximado</h1>
+            <canvas id="canvas" width="520" height="260"></canvas>
             <div class="big-value" id="pi">?</div>
             <div class="meter"><span id="pi-meter"></span></div>
           </section>
         </main>
       `,
       api: `
-        function estimarPi(total) {
-          let dentro = 0;
-          const tries = Number(total);
-          for (let i = 0; i < tries; i++) {
-            const x = Math.random();
-            const y = Math.random();
-            if (x * x + y * y <= 1) dentro++;
-          }
-          window.exerciseState.total = tries;
-          return 4 * dentro / tries;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        window.exerciseState.total = 0;
+        window.exerciseState.inside = 0;
+        function drawBoard() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = '#0077b6';
+          ctx.strokeRect(70, 20, 220, 220);
+          ctx.beginPath();
+          ctx.arc(70, 240, 220, -Math.PI / 2, 0);
+          ctx.stroke();
+        }
+        drawBoard();
+        function pontoDentro(x, y) {
+          return Number(x) * Number(x) + Number(y) * Number(y) <= 1;
+        }
+        function criarPonto(x, y) {
+          const px = Number(x);
+          const py = Number(y);
+          const inside = pontoDentro(px, py);
+          ctx.fillStyle = inside ? '#16a34a' : '#dc2626';
+          ctx.globalAlpha = 0.6;
+          ctx.beginPath();
+          ctx.arc(70 + px * 220, 240 - py * 220, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          window.exerciseState.total++;
+          if (inside) window.exerciseState.inside++;
         }
         function mostrarPi(valor) {
           const pi = Number(valor);
@@ -224,8 +312,27 @@ window.exerciseTopics.push({
           document.getElementById('pi-meter').style.width = Math.min(100, Math.max(0, pi / Math.PI * 100)) + '%';
           window.exerciseState.pi = pi;
         }
+        function mudarCorBarra(cor) {
+          document.getElementById('pi-meter').style.background = String(cor);
+          window.exerciseState.meterColor = String(cor);
+        }
       `,
-      validate: (code, state) => state.total >= 1000 && Math.abs(state.pi - Math.PI) < 0.25,
+      visualControls: [
+        {
+          label: 'Cor da barra',
+          type: 'color',
+          defaultValue: '#0077b6',
+          pattern: 'mudarCorBarra\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorBarra("${value}");`,
+        },
+      ],
+      validate: (code, state) =>
+        /\bfor\s*\(/.test(code) &&
+        /Math\.random/.test(code) &&
+        /criarPonto/.test(code) &&
+        /pontoDentro/.test(code) &&
+        state.total >= 1000 &&
+        Math.abs(state.pi - Math.PI) < 0.25,
     },
   ],
 });

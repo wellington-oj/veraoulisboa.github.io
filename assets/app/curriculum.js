@@ -1,0 +1,79 @@
+window.Curriculum = (() => {
+  const plan = [
+    {
+      id: 'fundamentos',
+      title: 'Primeiros Programas e Texto',
+      exercises: ['intro', 'ola', 'strings', 'falar'],
+    },
+    {
+      id: 'numeros',
+      title: 'Números, Contas e Input',
+      exercises: ['numeros-precedencia', 'numeros-variavel', 'numeros-divisao', 'numeros-divisao-zero', 'calculadora-interativa'],
+    },
+    {
+      id: 'ciclos',
+      title: 'Decisões, Ciclos e Jogos',
+      exercises: ['listas', 'aleatorio', 'booleanos', 'par-impar', 'semaforo-amarelo', 'while', 'adivinhar-numero'],
+    },
+    {
+      id: 'donatello',
+      title: 'Donatello e Movimento',
+      exercises: ['donatello', 'donatello-circulo', 'donatello-oito', 'donatello-oito-if'],
+    },
+    {
+      id: 'cifras',
+      title: 'Cifras e Texto',
+      exercises: ['cesar', 'cesar-desencriptar', 'cifra-interativa'],
+    },
+    {
+      id: 'matematica',
+      title: 'Fórmulas, Aleatoriedade e Pi',
+      exercises: ['formula', 'pi-coordenadas', 'pi'],
+    },
+    {
+      id: 'estruturas',
+      title: 'Grafos, Redes e Procura',
+      exercises: ['grafo-criar', 'grafo-caminho', 'rede-pesos', 'arvore-procura'],
+    },
+  ];
+
+  function build(sourceTopics = window.exerciseTopics || []) {
+    const byId = new Map();
+    sourceTopics.forEach((topic) => {
+      topic.exercises.forEach((exercise) => byId.set(exercise.id, exercise));
+    });
+
+    const used = new Set();
+    const topics = plan.map((topic) => ({
+      id: topic.id,
+      title: topic.title,
+      exercises: topic.exercises
+        .map((id) => {
+          const exercise = byId.get(id);
+          if (exercise) used.add(id);
+          return exercise;
+        })
+        .filter(Boolean),
+    })).filter((topic) => topic.exercises.length);
+
+    const leftovers = sourceTopics
+      .flatMap((topic) => topic.exercises)
+      .filter((exercise) => !used.has(exercise.id));
+
+    if (leftovers.length) {
+      topics.push({
+        id: 'outros',
+        title: 'Outros Exercícios',
+        exercises: leftovers,
+      });
+    }
+
+    const exercises = topics.flatMap((topic) => (
+      topic.exercises.map((exercise) => ({ ...exercise, topic: topic.title }))
+    ));
+
+    return { topics, exercises };
+  }
+
+  return { build };
+})();

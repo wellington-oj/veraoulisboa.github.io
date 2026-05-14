@@ -6,9 +6,12 @@ function donatelloApi() {
     const ctx = canvas.getContext('2d');
     let turtleDraw = { x: 190, y: 120, angle: 0 };
     let animationDelay = 14;
+    let drawingColor = '#2f5d78';
+    let drawingWidth = 4;
     const queuedMoves = [];
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#2f5d78';
+    const drawnSegments = [];
+    ctx.lineWidth = drawingWidth;
+    ctx.strokeStyle = drawingColor;
     ctx.lineCap = 'round';
     window.exerciseState.moves = [];
 
@@ -40,6 +43,14 @@ function donatelloApi() {
         if (value === 'normal') animationDelay = 14;
         if (value === 'lento') animationDelay = 35;
         window.exerciseState.speed = value;
+      },
+      color(cor) {
+        drawingColor = String(cor);
+        window.exerciseState.drawingColor = drawingColor;
+      },
+      width(tamanho) {
+        drawingWidth = Number(tamanho);
+        window.exerciseState.drawingWidth = drawingWidth;
       }
     };
 
@@ -61,19 +72,43 @@ function donatelloApi() {
       ctx.restore();
     }
 
+    function drawPath(tempSegment) {
+      ctx.save();
+      ctx.strokeStyle = drawingColor;
+      ctx.lineWidth = drawingWidth;
+      ctx.lineCap = 'round';
+      for (const segment of drawnSegments) {
+        ctx.beginPath();
+        ctx.moveTo(segment.start.x, segment.start.y);
+        ctx.lineTo(segment.end.x, segment.end.y);
+        ctx.stroke();
+      }
+      if (tempSegment) {
+        ctx.beginPath();
+        ctx.moveTo(tempSegment.start.x, tempSegment.start.y);
+        ctx.lineTo(tempSegment.end.x, tempSegment.end.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function renderScene(tempSegment) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPath(tempSegment);
+      drawTurtle();
+    }
+
     window.playAnimation = async function playAnimation() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawnSegments.length = 0;
       turtleDraw = { x: 190, y: 120, angle: 0 };
-      drawTurtle();
       await new Promise((resolve) => setTimeout(resolve, 160));
-      ctx.strokeStyle = '#2f5d78';
-      ctx.lineWidth = 4;
 
       for (const move of queuedMoves) {
         if (move.type === 'position') {
           turtleDraw.x = move.x;
           turtleDraw.y = move.y;
-          drawTurtle();
+          renderScene();
         }
         if (move.type === 'right') turtleDraw.angle += move.value;
         if (move.type === 'left') turtleDraw.angle -= move.value;
@@ -89,14 +124,12 @@ function donatelloApi() {
             const t = frame / frames;
             turtleDraw.x = start.x + (end.x - start.x) * t;
             turtleDraw.y = start.y + (end.y - start.y) * t;
-            ctx.beginPath();
-            ctx.moveTo(start.x, start.y);
-            ctx.lineTo(turtleDraw.x, turtleDraw.y);
-            ctx.stroke();
-            drawTurtle();
+            renderScene({ start, end: { x: turtleDraw.x, y: turtleDraw.y } });
             await new Promise((resolve) => setTimeout(resolve, animationDelay));
           }
+          drawnSegments.push({ start, end });
           turtleDraw = { ...end, angle: turtleDraw.angle };
+          renderScene();
         }
         await new Promise((resolve) => setTimeout(resolve, animationDelay * 4));
       }
@@ -123,11 +156,12 @@ window.exerciseTopics.push({
         'Depois roda 90 graus.',
         'Se quiseres, muda a posição inicial com donatello.position(x, y).',
         'Experimenta donatello.speed("lento"), "normal" ou "rapido".',
+        'Altera a cor e a grossura da linha nos controlos visuais.',
       ],
       observation: 'A figura deve formar quatro lados iguais. A animação mostra a ordem das instruções.',
       hint: 'Para um quadrado, repete quatro vezes: anda um lado, depois vira um canto de 90 graus.',
-      starter: 'donatello.speed("normal");\ndonatello.position(190, 120);\n\n// cria o ciclo do quadrado aqui',
-      solution: 'donatello.speed("rapido");\ndonatello.position(190, 120);\n\nfor (let i = 0; i < 4; i++) {\n  donatello.forward(120);\n  donatello.right(90);\n}',
+      starter: 'donatello.speed("normal");\ndonatello.position(190, 120);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\n// cria o ciclo do quadrado aqui',
+      solution: 'donatello.speed("rapido");\ndonatello.position(190, 120);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\nfor (let i = 0; i < 4; i++) {\n  donatello.forward(120);\n  donatello.right(90);\n}',
       html: `
         <main class="stage">
           <section class="panel">
@@ -137,6 +171,25 @@ window.exerciseTopics.push({
         </main>
       `,
       api: donatelloApi,
+      visualControls: [
+        {
+          label: 'Cor da linha',
+          type: 'color',
+          defaultValue: '#2f5d78',
+          pattern: 'donatello\\.color\\("([^"]+)"\\);?',
+          template: (value) => `donatello.color("${value}");`,
+        },
+        {
+          label: 'Grossura da linha',
+          type: 'range',
+          min: 1,
+          max: 12,
+          step: 1,
+          defaultValue: 4,
+          pattern: 'donatello\\.width\\((\\d+)\\);?',
+          template: (value) => `donatello.width(${value});`,
+        },
+      ],
       validate: (code, state) => {
         const moves = state.moves || [];
         return /\bfor\s*\(/.test(code) &&
@@ -157,11 +210,12 @@ window.exerciseTopics.push({
         'Usa um ciclo for com 360 repetições.',
         'Em cada volta, anda 1 pixel.',
         'Em cada volta, roda 1 grau.',
+        'Experimenta a cor e a grossura da linha para comparar estilos.',
       ],
       observation: 'A circunferência pode não ficar matematicamente perfeita, mas deve parecer uma volta fechada.',
       hint: 'Uma volta completa tem 360 graus. Podes fazer muitos passos pequenos, rodando um pouco em cada passo.',
-      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\n// cria o ciclo da circunferência aqui',
-      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\nfor (let i = 0; i < 360; i++) {\n  donatello.forward(1);\n  donatello.right(1);\n}',
+      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\n// cria o ciclo da circunferência aqui',
+      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\nfor (let i = 0; i < 360; i++) {\n  donatello.forward(1);\n  donatello.right(1);\n}',
       html: `
         <main class="stage">
           <section class="panel">
@@ -171,6 +225,25 @@ window.exerciseTopics.push({
         </main>
       `,
       api: donatelloApi,
+      visualControls: [
+        {
+          label: 'Cor da linha',
+          type: 'color',
+          defaultValue: '#2f5d78',
+          pattern: 'donatello\\.color\\("([^"]+)"\\);?',
+          template: (value) => `donatello.color("${value}");`,
+        },
+        {
+          label: 'Grossura da linha',
+          type: 'range',
+          min: 1,
+          max: 12,
+          step: 1,
+          defaultValue: 4,
+          pattern: 'donatello\\.width\\((\\d+)\\);?',
+          template: (value) => `donatello.width(${value});`,
+        },
+      ],
       validate: (code, state) => {
         const moves = state.moves || [];
         return /\bfor\s*\(/.test(code) &&
@@ -191,11 +264,12 @@ window.exerciseTopics.push({
         'Usa pelo menos um ciclo for.',
         'Faz uma parte com donatello.right.',
         'Faz outra parte com donatello.left.',
+        'Usa os controlos para mudar a linha sem perder a lógica do desenho.',
       ],
       observation: 'Deves ver duas voltas ligadas. A figura pode variar, mas tem de usar os dois sentidos de rotação.',
       hint: 'Divide o desenho em duas voltas: uma roda para a direita, a outra roda para a esquerda.',
-      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\n// desenha a primeira volta\n\n// desenha a segunda volta',
-      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\nfor (let i = 0; i < 180; i++) {\n  donatello.forward(1);\n  donatello.right(2);\n}\n\nfor (let i = 0; i < 180; i++) {\n  donatello.forward(1);\n  donatello.left(2);\n}',
+      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\n// desenha a primeira volta\n\n// desenha a segunda volta',
+      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\nfor (let i = 0; i < 180; i++) {\n  donatello.forward(1);\n  donatello.right(2);\n}\n\nfor (let i = 0; i < 180; i++) {\n  donatello.forward(1);\n  donatello.left(2);\n}',
       html: `
         <main class="stage">
           <section class="panel">
@@ -205,6 +279,25 @@ window.exerciseTopics.push({
         </main>
       `,
       api: donatelloApi,
+      visualControls: [
+        {
+          label: 'Cor da linha',
+          type: 'color',
+          defaultValue: '#2f5d78',
+          pattern: 'donatello\\.color\\("([^"]+)"\\);?',
+          template: (value) => `donatello.color("${value}");`,
+        },
+        {
+          label: 'Grossura da linha',
+          type: 'range',
+          min: 1,
+          max: 12,
+          step: 1,
+          defaultValue: 4,
+          pattern: 'donatello\\.width\\((\\d+)\\);?',
+          template: (value) => `donatello.width(${value});`,
+        },
+      ],
       validate: (code, state) => {
         const moves = state.moves || [];
         return /\bfor\s*\(/.test(code) &&
@@ -226,11 +319,12 @@ window.exerciseTopics.push({
         'Usa apenas um ciclo for.',
         'Dentro do ciclo, usa if.',
         'Na primeira parte usa right; na segunda parte usa left.',
+        'Ajusta a cor e a grossura para veres que desenho e estilo são instruções diferentes.',
       ],
       observation: 'A validação procura um ciclo, uma decisão e muitos movimentos.',
       hint: 'Usa o valor de i para separar a primeira metade da segunda metade do ciclo.',
-      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\n// cria um único ciclo com uma decisão dentro',
-      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\n\nfor (let i = 0; i < 360; i++) {\n  donatello.forward(1);\n\n  if (i < 180) {\n    donatello.right(2);\n  } else {\n    donatello.left(2);\n  }\n}',
+      starter: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\n// cria um único ciclo com uma decisão dentro',
+      solution: 'donatello.speed("rapido");\ndonatello.position(250, 180);\ndonatello.color("#2f5d78");\ndonatello.width(4);\n\nfor (let i = 0; i < 360; i++) {\n  donatello.forward(1);\n\n  if (i < 180) {\n    donatello.right(2);\n  } else {\n    donatello.left(2);\n  }\n}',
       html: `
         <main class="stage">
           <section class="panel">
@@ -240,6 +334,25 @@ window.exerciseTopics.push({
         </main>
       `,
       api: donatelloApi,
+      visualControls: [
+        {
+          label: 'Cor da linha',
+          type: 'color',
+          defaultValue: '#2f5d78',
+          pattern: 'donatello\\.color\\("([^"]+)"\\);?',
+          template: (value) => `donatello.color("${value}");`,
+        },
+        {
+          label: 'Grossura da linha',
+          type: 'range',
+          min: 1,
+          max: 12,
+          step: 1,
+          defaultValue: 4,
+          pattern: 'donatello\\.width\\((\\d+)\\);?',
+          template: (value) => `donatello.width(${value});`,
+        },
+      ],
       validate: (code, state) => {
         const moves = state.moves || [];
         return /\bfor\s*\(/.test(code) &&

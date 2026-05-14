@@ -5,6 +5,69 @@ window.exerciseTopics.push({
   title: 'Primeiros Programas e Texto',
   exercises: [
     {
+      id: 'intro',
+      title: 'Bem-vindo ao laboratório de programação!',
+      points: 10,
+      explanation: [
+        'Hoje vão aprender a programar usando uma linguagem chamada TypeScript.',
+        'Programar é, basicamente, dar instruções ao computador, como se estivéssemos a ensinar-lhe uma receita, passo a passo. Essas instruções formam programas.',
+        'Já usaram programas feitos por outras pessoas: o navegador que estão a usar, jogos, calculadoras, editores de texto... Tudo isso são conjuntos de instruções que alguém escreveu.',
+        'Neste laboratório vão aprender os primeiros passos para escreverem os vossos próprios programas. Podem ser úteis para a escola, podem virar jogos engraçados… ou podem simplesmente existir porque sim!',
+        'Não precisam de saber nada antes de começar — só precisam de curiosidade e vontade de experimentar!',
+        'Preparados? Vamos programar! 👨‍💻👩‍💻'
+      ],
+      instructions: [
+        'Faça modificações ao campo de "Exploração Visual" e veja o que acontece.'
+      ],
+      observation: 'Veja se consegue colocar a caixa vermelha e o texto grande ao mesmo tempo!',
+      hint: 'Não há dicas 🤖',
+      starter: 'mostrarMensagem("Mude as coisas no menu ao lado para perceber o que acontece!");\nmudarCorPainel("#3b93ff");\nmudarTamanhoMensagem(44);',
+      solution: 'mostrarMensagem("Mude as coisas no menu ao lado para perceber o que acontece!");\nmudarCorPainel("#3b93ff");\nmudarTamanhoMensagem(44);',
+      html: `
+       <main class="stage">
+          <section class="panel dark">
+            <h1 id="message">Este painel muda quando o teu programa corre.</h1>
+          </section>
+        </main>
+      `,
+      api: `
+        function mostrarMensagem(texto) {
+          const message = String(texto);
+          setText('message', message);
+          window.exerciseState.message = message;
+        }
+        function mudarCorPainel(cor) {
+          document.querySelector('.panel').style.background = String(cor);
+          window.exerciseState.panelColor = String(cor);
+        }
+        function mudarTamanhoMensagem(tamanho) {
+          const size = Number(tamanho);
+          document.getElementById('message').style.fontSize = size + 'px';
+          window.exerciseState.messageSize = size;
+        }
+      `,
+      visualControls: [
+        {
+          label: 'Cor do painel',
+          type: 'color',
+          defaultValue: '#102033',
+          pattern: 'mudarCorPainel\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorPainel("${value}");`,
+        },
+        {
+          label: 'Tamanho da mensagem',
+          type: 'range',
+          min: 28,
+          max: 72,
+          step: 2,
+          defaultValue: 44,
+          pattern: 'mudarTamanhoMensagem\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoMensagem(${value});`,
+        },
+      ],
+      validate: (code, state) => state.message && state.message.length >= 8,
+    },
+    {
       id: 'ola',
       title: 'Olá, mundo visual',
       points: 10,
@@ -15,13 +78,14 @@ window.exerciseTopics.push({
       ],
       instructions: [
         'Chama a função mostrarMensagem com uma frase tua.',
-        'A mensagem tem de ter pelo menos 8 caracteres.',
+        'A mensagem tem de ter pelo menos 8 caracteres (letras, números ou caracteres especiais).',
         'Carrega em Executar e confirma que o painel muda.',
+        'Usa a exploração visual para mudar a cor do painel e o tamanho da mensagem.',
       ],
       observation: 'Se mudares apenas o texto dentro das aspas e executares outra vez, o resultado também muda.',
       hint: 'Texto fica entre aspas. Escreve uma frase tua dentro da função mostrarMensagem.',
-      starter: 'mostrarMensagem("");',
-      solution: 'mostrarMensagem("Olá, FCUL!");',
+      starter: 'mostrarMensagem("");\nmudarCorPainel("#102033");\nmudarTamanhoMensagem(44);',
+      solution: 'mostrarMensagem("Olá, FCUL!");\nmudarCorPainel("#102033");\nmudarTamanhoMensagem(44);',
       html: `
         <main class="stage">
           <section class="panel dark">
@@ -36,27 +100,60 @@ window.exerciseTopics.push({
           setText('message', message);
           window.exerciseState.message = message;
         }
+        function mudarCorPainel(cor) {
+          document.querySelector('.panel').style.background = String(cor);
+          window.exerciseState.panelColor = String(cor);
+        }
+        function mudarTamanhoMensagem(tamanho) {
+          const size = Number(tamanho);
+          document.getElementById('message').style.fontSize = size + 'px';
+          window.exerciseState.messageSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Cor do painel',
+          type: 'color',
+          defaultValue: '#102033',
+          pattern: 'mudarCorPainel\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorPainel("${value}");`,
+        },
+        {
+          label: 'Tamanho da mensagem',
+          type: 'range',
+          min: 28,
+          max: 72,
+          step: 2,
+          defaultValue: 44,
+          pattern: 'mudarTamanhoMensagem\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoMensagem(${value});`,
+        },
+      ],
       validate: (code, state) => state.message && state.message.length >= 8,
     },
     {
       id: 'strings',
-      title: 'Cartão de apresentação',
+      title: 'Variáveis',
       points: 10,
       explanation: [
         'Uma variável é um nome que damos a um valor. Podes imaginar uma variável como uma caixa com uma etiqueta. A etiqueta é o nome da variável; lá dentro fica guardado o valor.',
         'Neste exercício vais guardar o teu nome numa variável. Depois vais passar essa variável a uma função. Isto é importante porque, em programas maiores, raramente escrevemos tudo diretamente. Guardamos valores, damos-lhes nomes e reutilizamo-los.',
-        'A parte : string é uma pista do TypeScript. Ela diz: esta variável deve guardar texto. Se mais tarde tentares guardar um número no mesmo sítio, o TypeScript consegue avisar-te.',
+        'Podemos definir as variáveis de várias formas. Em TypeScript, uma forma comum é escrever [const nome: string = "Ana";]. O nome da variável é [nome], o valor que lhe estamos a dar é ["Ana"] e o tipo desse valor é [string].',
+        'O facto de termos [const] no início significa que esta variável não pode ser reatribuída. Ou seja, depois de escrevermos [const nome: string = "Ana";], não podemos escrever [nome = "Carlos";] mais tarde. O valor da variável [nome] vai ser sempre "Ana".',
+        'Se quiseres uma variável que possa mudar, podes usar [let] em vez de [const]. Por exemplo, [let idade: number = 30;] define uma variável chamada [idade] que guarda um número e que pode ser atualizada mais tarde.',
+        'A linha de código [const nome: string = "";] é uma pista do TypeScript. Ela diz: esta variável, chamada nome, deve guardar texto. Se mais tarde tentares guardar um número no mesmo sítio, o TypeScript consegue avisar-te.',
       ],
       instructions: [
         'Cria uma variável nome com tipo string.',
-        'Escreve um detalhe sobre a pessoa ou personagem do cartão.',
+        'Cria uma variável detalhe com tipo string.',
         'Usa criarCartao(nome, detalhe) para preencher o cartão.',
+        'Experimenta mudar a cor do cartão e o tamanho do nome.',
       ],
-      observation: 'O cartão deve mostrar o nome e uma frase descritiva. O importante é perceber que a função recebe valores que preparaste antes.',
-      hint: 'Cria primeiro a variável com o nome. Depois usa essa variável quando chamares a função do cartão.',
-      starter: 'const nome: string = "";\ncriarCartao(nome, "");',
-      solution: 'const nome: string = "Ana";\ncriarCartao(nome, "gosta de astronomia");',
+      observation: 'O cartão deve mostrar o nome e uma frase descritiva. O importante é perceber que a função recebe valores que preparaste antes.' +
+        'Podes experimentar criar mais variáveis e concatená-las para criar mensagens mais complexas. Experimenta fazer const fraseCompleta = nome + " " + detalhe; e depois mostrar essa frase completa no cartão.',
+      hint: 'Observa os exemplos fornecidos para perceber como criar e usar variáveis.',
+      starter: '//cria a variável nome aqui\n//cria a variável detalhe aqui;\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
+      solution: 'const nome: string = "Ana";\nconst detalhe: string = "gosta de astronomia";\ncriarCartao(nome, detalhe);\n\nmudarCorCartao("#ffffff");\nmudarTamanhoNome(48);',
       html: `
         <main class="stage">
           <section class="panel">
@@ -75,7 +172,35 @@ window.exerciseTopics.push({
           window.exerciseState.name = safeName;
           window.exerciseState.detail = safeDetail;
         }
+        function mudarCorCartao(cor) {
+          document.querySelector('.panel').style.background = String(cor);
+          window.exerciseState.cardColor = String(cor);
+        }
+        function mudarTamanhoNome(tamanho) {
+          const size = Number(tamanho);
+          document.getElementById('name').style.fontSize = size + 'px';
+          window.exerciseState.nameSize = size;
+        }
       `,
+      visualControls: [
+        {
+          label: 'Cor do cartão',
+          type: 'color',
+          defaultValue: '#ffffff',
+          pattern: 'mudarCorCartao\\("([^"]+)"\\);?',
+          template: (value) => `mudarCorCartao("${value}");`,
+        },
+        {
+          label: 'Tamanho do nome',
+          type: 'range',
+          min: 30,
+          max: 76,
+          step: 2,
+          defaultValue: 48,
+          pattern: 'mudarTamanhoNome\\((\\d+)\\);?',
+          template: (value) => `mudarTamanhoNome(${value});`,
+        },
+      ],
       validate: (code, state) => /:\s*string/.test(code) && state.name?.length >= 2 && state.detail?.length >= 5,
     },
   ],
