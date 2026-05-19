@@ -1,5 +1,5 @@
-const STORAGE_KEY = 'veraoProgramacaoLab:v4';
-const ENABLE_SOLUTIONS = true;
+const STORAGE_KEY = 'veraoProgramacaoLab:v5';
+const ENABLE_SOLUTIONS = LabMode.isFacilitator;
 
 const { topics, exercises } = Curriculum.build();
 
@@ -8,6 +8,9 @@ let activeExerciseId = getValidExerciseId(appState.activeExerciseId);
 let activeTopicId = getTopicIdForExercise(activeExerciseId);
 let lastRunState = {};
 let currentRunCanScore = false;
+let editorFocused = false;
+let tabVisible = document.visibilityState === 'visible';
+let timerPaused = Boolean(appState.timerPaused);
 
 appState.activeTopicId = activeTopicId;
 appState.activeExerciseId = activeExerciseId;
@@ -21,6 +24,7 @@ function loadState() {
     completed: {},
     codes: {},
     timeSpent: 0,
+    timerPaused: false,
   };
 
   try {
@@ -362,8 +366,48 @@ function openInCodePen() {
 }
 
 function restartTutorial() {
+  if (!window.confirm('Recomeçar tudo? Perdes o progresso e a pontuação guardados neste browser.')) {
+    return;
+  }
   localStorage.removeItem(STORAGE_KEY);
   location.reload();
+}
+
+function resetCurrentExercise() {
+  const exercise = getActiveExercise();
+  if (!window.confirm(`Repor o exercício "${exercise.title}"? O código volta ao início e a conclusão deste exercício é anulada.`)) {
+    return;
+  }
+
+  delete appState.codes[exercise.id];
+  if (appState.completed[exercise.id]) {
+    appState.score = Math.max(0, appState.score - exercise.points);
+    delete appState.completed[exercise.id];
+  }
+  if (appState.failed) delete appState.failed[exercise.id];
+  saveState();
+  renderActiveExercise();
+  setFeedback('Exercício reposto. Podes começar de novo.', 'neutral');
+}
+
+function shouldCountTimer() {
+  return tabVisible && editorFocused && !timerPaused;
+}
+
+function toggleTimerPause() {
+  timerPaused = !timerPaused;
+  appState.timerPaused = timerPaused;
+  saveState();
+  syncTimerPauseButton();
+}
+
+function syncTimerPauseButton() {
+  const btn = document.getElementById('timerPauseBtn');
+  if (!btn) return;
+  btn.textContent = timerPaused ? '▶' : '⏸';
+  btn.title = timerPaused ? 'Retomar cronómetro' : 'Pausar cronómetro';
+  btn.setAttribute('aria-label', btn.title);
+  btn.setAttribute('aria-pressed', String(timerPaused));
 }
 
 // ─── Leaderboard (Firebase) ────────────────────────────────────────────────
@@ -482,17 +526,28 @@ function handleStudentCodeResult(data) {
     return;
   }
 
-  if (exercise.validate(getEditor().value, lastRunState)) {
+  const validation = ExerciseValidator.evaluate(exercise, getEditor().value, lastRunState);
+  if (validation.ok) {
     completeExercise(exercise);
     setFeedback(`Correto! Ganhaste ${exercise.points} pontos.`, 'correct');
     return;
   }
 
-  setFeedback('O código correu, mas ainda não cumpre o objetivo.', 'wrong');
+  setFeedback(validation.message, 'wrong');
   if (!appState.failed) appState.failed = {};
   appState.failed[exercise.id] = true;
   saveState();
   renderExerciseList();
+}
+
+function handleEditorKeydown(event) {
+  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+    event.preventDefault();
+    runStudentCode();
+    return;
+  }
+
+  handleEditorIndent(event);
 }
 
 function handleEditorIndent(event) {
@@ -527,6 +582,7 @@ function handleEditorIndent(event) {
 
 function startTimer() {
   setInterval(() => {
+    if (!shouldCountTimer()) return;
     appState.timeSpent += 1;
     saveState();
     updateHeader();
@@ -535,15 +591,27 @@ function startTimer() {
 
 function initApp() {
   document.getElementById('solutionBtn').hidden = !ENABLE_SOLUTIONS;
-  getEditor().addEventListener('input', handleEditorInput);
-  getEditor().addEventListener('scroll', syncEditorHighlightScroll);
-  getEditor().addEventListener('keydown', handleEditorIndent);
+  document.body.classList.toggle('lab-mode-facilitator', ENABLE_SOLUTIONS);
+  document.body.classList.toggle('lab-mode-student', !ENABLE_SOLUTIONS);
+
+  const editor = getEditor();
+  editor.addEventListener('input', handleEditorInput);
+  editor.addEventListener('scroll', syncEditorHighlightScroll);
+  editor.addEventListener('keydown', handleEditorKeydown);
+  editor.addEventListener('focus', () => { editorFocused = true; });
+  editor.addEventListener('blur', () => { editorFocused = false; });
+
+  document.addEventListener('visibilitychange', () => {
+    tabVisible = document.visibilityState === 'visible';
+  });
+
   document.getElementById('consoleForm').addEventListener('submit', (event) => {
     event.preventDefault();
     TerminalPanel.submitInput();
   });
 
   window.addEventListener('message', handlePreviewMessage);
+  syncTimerPauseButton();
   renderActiveExercise();
   startTimer();
 }

@@ -22,6 +22,24 @@ The exercise set is written in TypeScript. The original FCUL tutorial is used on
 
 - `assets/main.js` contains the platform runner: navigation, cache, scoring, preview iframe and CodePen export.
 - `assets/exercises/*.js` contains the exercise content, split by topic.
+- `assets/exercises/07-interativo.js` overrides exercises that use the terminal (`lerInput`); load order matters.
+- `assets/app/curriculum.js` defines the syllabus order shown in the sidebar.
+- `assets/app/exercise-checks.js` provides specific validation messages per exercise.
 - Each exercise can define `starter`, `solution`, `explanation`, `instructions`, a visual `html` panel, helper `api` functions, and a `validate` function.
 
-The current version intentionally includes a **Mostrar resposta** button and `solution` fields so facilitators can test every exercise quickly. Remove that button and the `solution` fields before publishing the student version.
+### Modos de utilização
+
+- **Estudante (predefinido):** sem botão «Mostrar resposta». Abre `index.html` ou usa `?mode=student`.
+- **Facilitador:** mostra respostas para testar exercícios. Usa `?mode=facilitator` (fica guardado neste browser).
+
+### Validação e manutenção
+
+- Esquema dos exercícios: [docs/EXERCISE-SCHEMA.md](docs/EXERCISE-SCHEMA.md)
+- Mensagens de erro por exercício: `assets/app/exercise-checks.js`
+- Verificar conteúdo antes de publicar: `node scripts/validate-exercises.js`
+
+### Atalhos e cronómetro
+
+- **Ctrl+Enter** (ou **Cmd+Enter** no Mac) executa o código.
+- **Repor exercício** repõe só o exercício atual.
+- O cronómetro só avança com o cursor no editor; pausa quando mudas de separador e com o botão ⏸ (visível ao passar o rato sobre o tempo).

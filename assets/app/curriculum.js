@@ -1,3 +1,6 @@
+// Canonical exercise order. Definitions live in assets/exercises/*.js.
+// 07-interativo.js loads last and overrides by id (terminal / lerInput variants:
+// falar, calculadora-interativa, cifra-interativa, adivinhar-numero).
 window.Curriculum = (() => {
   const plan = [
     {

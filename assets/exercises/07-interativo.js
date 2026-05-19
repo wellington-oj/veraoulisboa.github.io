@@ -1,3 +1,5 @@
+// Interactive overrides (terminal + lerInput). Loaded after other exercise files;
+// same ids replace earlier definitions. Order is set in assets/app/curriculum.js.
 window.exerciseTopics = window.exerciseTopics || [];
 
 window.exerciseTopics.push({
