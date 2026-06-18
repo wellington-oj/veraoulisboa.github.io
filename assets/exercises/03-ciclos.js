@@ -229,7 +229,7 @@ window.exerciseTopics.push({
         'Ajusta o tamanho das luzes e observa a chamada de função que aparece no código.',
       ],
       observation: 'Muda [true] para [false] e executa outra vez para veres o outro ramo do [if].',
-      hint: 'Começa por criar a variável booleana. Depois usa [if] para o caso verdadeiro e [else] para o caso falso.',
+      hint: 'Começa por criar a variável booleana. Depois usa [if] para o caso verdadeiro e [else] para o caso falso. Usa `ligarSemaforo("verde")` para ligar o verde e desligar o vermelho, e `ligarSemaforo("vermelho")` para ligar o vermelho e desligar o verde.',
       starter: 'const podeAvancar: boolean = true;\n\n// escreve a decisão aqui\n\nmudarTamanhoLuzes(88);',
       solution: 'const podeAvancar: boolean = true;\n\nif (podeAvancar) {\n  ligarSemaforo("verde");\n} else {\n  ligarSemaforo("vermelho");\n}\n\nmudarTamanhoLuzes(88);',
       html: `
