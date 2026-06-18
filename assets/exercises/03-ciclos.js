@@ -20,7 +20,7 @@ window.exerciseTopics.push({
         'Muda a cor e o tamanho das etiquetas para veres essas escolhas no código.',
       ],
       observation: 'Cada elemento da lista deve aparecer como uma etiqueta no painel.',
-      hint: 'Cria a lista primeiro. Depois usa um ciclo [for...of] para passar por cada fruta e chama [adicionarFruta] dentro do ciclo.',
+      hint: 'Cria a lista primeiro. Depois usa um ciclo [`for...of`] para passar por cada fruta e chama [adicionarFruta] dentro do ciclo. As frutas devem ser strings, e o `of` no `for...of` significa “para cada elemento da lista”.',
       starter: 'const frutas: string[] = [];\n\n// cria o ciclo aqui\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
       solution: 'const frutas: string[] = ["maçã", "banana", "kiwi"];\n\nfor (const fruta of frutas) {\n  adicionarFruta(fruta);\n}\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
       html: `
