@@ -8,6 +8,7 @@ let activeExerciseId = getValidExerciseId(appState.activeExerciseId);
 let activeTopicId = getTopicIdForExercise(activeExerciseId);
 let lastRunState = {};
 let currentRunCanScore = false;
+let currentRunIsActive = false;
 let editorFocused = false;
 let tabVisible = document.visibilityState === 'visible';
 let timerPaused = Boolean(appState.timerPaused);
@@ -274,8 +275,56 @@ function runStudentCode(showConsole = true) {
   saveState();
 
   currentRunCanScore = showConsole;
+  currentRunIsActive = showConsole;
+  syncRunControls();
+
   document.getElementById('preview').srcdoc = PreviewBuilder.buildDocument(exercise, code);
   if (showConsole) setFeedback('A executar...', 'neutral');
+}
+
+function cancelStudentCode() {
+  currentRunIsActive = false;
+  currentRunCanScore = false;
+  syncRunControls();
+  TerminalPanel.clear();
+  document.getElementById('preview').srcdoc = '<!DOCTYPE html><html><head></head><body></body></html>';
+  setFeedback('Execução cancelada.', 'neutral');
+}
+
+function syncRunControls() {
+  const cancelButton = document.getElementById('cancelExerciseBtn');
+  const runButton = document.getElementById('runExerciseBtn');
+  if (cancelButton) cancelButton.disabled = !currentRunIsActive;
+  if (runButton) runButton.disabled = currentRunIsActive;
+}
+
+function initApp() {
+  document.getElementById('solutionBtn').hidden = !ENABLE_SOLUTIONS;
+  document.body.classList.toggle('lab-mode-facilitator', ENABLE_SOLUTIONS);
+  document.body.classList.toggle('lab-mode-student', !ENABLE_SOLUTIONS);
+
+  const editor = getEditor();
+  editor.addEventListener('input', handleEditorInput);
+  editor.addEventListener('scroll', syncEditorHighlightScroll);
+  editor.addEventListener('keydown', handleEditorKeydown);
+  editor.addEventListener('focus', () => { editorFocused = true; });
+  editor.addEventListener('blur', () => { editorFocused = false; });
+
+  document.addEventListener('visibilitychange', () => {
+    tabVisible = document.visibilityState === 'visible';
+  });
+
+  document.getElementById('consoleForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    TerminalPanel.submitInput();
+  });
+
+  window.addEventListener('message', handlePreviewMessage);
+  window.addEventListener('beforeunload', () => {
+    if (!isRestarting) saveState();
+  });
+
+  syncRunControls();
 }
 
 function completeExercise(exercise) {
@@ -551,8 +600,13 @@ function handleStudentCodeResult(data) {
 
   if (!currentRunCanScore) {
     setFeedback('Pronto para executar.', 'neutral');
+    currentRunIsActive = false;
+    syncRunControls();
     return;
   }
+
+  currentRunIsActive = false;
+  syncRunControls();
 
   if (data.type === 'student-code-error') {
     setFeedback(`Erro: ${data.message}`, 'wrong');
@@ -661,6 +715,7 @@ function initApp() {
 
   syncTimerPauseButton();
   renderActiveExercise();
+  syncRunControls();
   startTimer();
 }
 

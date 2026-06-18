@@ -72,7 +72,8 @@
               aria-describedby="feedback"></textarea>
           </div>
           <div class="actions">
-            <button type="button" onclick="runStudentCode()" title="Executar (Ctrl+Enter ou Cmd+Enter)">Executar</button>
+            <button type="button" id="runExerciseBtn" onclick="runStudentCode()" title="Executar (Ctrl+Enter ou Cmd+Enter)">Executar</button>
+            <button type="button" class="secondary-button" id="cancelExerciseBtn" onclick="cancelStudentCode()" disabled>Cancelar</button>
             <button type="button" class="secondary-button" id="resetExerciseBtn" onclick="resetCurrentExercise()">Repor
               exercício</button>
             <button type="button" class="secondary-button" id="solutionBtn" onclick="showSolution()">Mostrar
