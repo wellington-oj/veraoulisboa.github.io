@@ -223,12 +223,16 @@ function renderBriefing(exercise, completed) {
   document.getElementById('exerciseBody').innerHTML = `
     ${(exercise.explanation || []).map((paragraph) => `<p>${AppUtils.formatText(paragraph)}</p>`).join('')}
     ${advancedBlock}
-    <p><strong>Objetivo:</strong></p>
+    <p class="briefing-tag tag-objetivos">Objetivos</p>
     <ul>${exercise.instructions.map((instruction) => `<li>${AppUtils.formatText(instruction)}</li>`).join('')}</ul>
-    <p><strong>O que deves observar:</strong> ${AppUtils.formatText(exercise.observation || 'Executa o programa e compara o resultado visual com o objetivo.')}</p>
+    <p class="briefing-tag tag-observar">O que deves observar</p>
+    <p>${AppUtils.formatText(exercise.observation || 'Executa o programa e compara o resultado visual com o objetivo.')}</p>
     <button type="button" class="hint-toggle" onclick="toggleHint()">Mostrar dica</button>
   `;
-  document.getElementById('hintBox').innerHTML = AppUtils.formatText(exercise.hint);
+  const hint = exercise.hint;
+  document.getElementById('hintBox').innerHTML = Array.isArray(hint)
+    ? `<ul>${hint.map((item) => `<li>${AppUtils.formatText(item)}</li>`).join('')}</ul>`
+    : AppUtils.formatText(hint);
   document.getElementById('hintBox').hidden = true;
 }
 
