@@ -382,6 +382,27 @@ body {
   background: #334155;
 }
 
+.briefing-tag {
+  display: inline-block;
+  margin: 16px 0 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tag-objetivos {
+  background: #0077b6;
+  color: white;
+}
+
+.tag-observar {
+  background: #e8eef7;
+  color: #42526b;
+}
+
 .advanced-toggle {
   margin: 4px 0 2px;
   background: #7c3aed;

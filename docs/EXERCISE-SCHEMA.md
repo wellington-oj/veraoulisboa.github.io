@@ -22,7 +22,7 @@ The canonical order lives in `assets/app/curriculum.js`. Interactive variants in
 | `explanation` | `string[]` | Briefing paragraphs |
 | `advanced` | `string[]` | Optional deeper "Avançado" paragraphs, shown collapsed behind a toggle button for curious students |
 | `observation` | `string` | What to look for in the preview |
-| `hint` | `string` | Shown in the hint box |
+| `hint` | `string` \| `string[]` | Shown in the hint box; an array renders as a bulleted list (e.g. a "Dica" ladder) |
 | `html` | `string` | Preview panel markup |
 | `api` | `string` \| `() => string` | Extra functions injected into preview |
 | `solution` | `string` | Facilitator-only reference (hidden in student mode) |
