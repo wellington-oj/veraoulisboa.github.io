@@ -8,6 +8,7 @@
 - ~~Exercise 22: In the hint, explain that a string is a list of characters and suggest using `.length` to validate the word length.~~ ✔️ Done — added a new `palavra-passe` exercise (strings as character lists + `.length` validation).
 - Found during review: `cesar-desencriptar` explanation said "SPHY"; should be "SPbY". ✔️ Done.
 - Found during testing: `donatello-circulo` reference solution (1px/1°×360) never passed its own validate (which required value 10); realigned instructions + validate to the 1px/1° approach. ✔️ Done.
+- Objetivos layer its sitting next to the 
 
 ## Feature Triage
 
@@ -42,6 +43,8 @@
 | Exercises 19-21: faster donatello loop execution [feature] | | | ✔️ | Claude |
 | booleanos: don't tell students to create predefined podeAvancar [feature] | | | ✔️ | Claude |
 | donatello-circulo: solution now satisfies its own validate [bug] | | | ✔️ | Claude |
+| Briefing section tags (Objetivos/Observar) + dicas moved into DICAS [feature] | | | ✔️ | Claude |
+| Per-concept animated diagrams in the briefing [feature] | | ⏳ | | Claude |
 
 ## QA Findings (2026-06-23)
 
