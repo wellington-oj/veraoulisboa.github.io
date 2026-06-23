@@ -7,14 +7,16 @@
 - ~~Exercise 17: The code example has a validation error.~~ ✔️ Done — the `aleatorio` (dice) feedback check tested `s.rolls`, which the runtime never sets; now reads `s.die` / `s.dice`.
 - ~~Exercise 22: In the hint, explain that a string is a list of characters and suggest using `.length` to validate the word length.~~ ✔️ Done — added a new `palavra-passe` exercise (strings as character lists + `.length` validation).
 - Found during review: `cesar-desencriptar` explanation said "SPHY"; should be "SPbY". ✔️ Done.
+- Found during testing: `donatello-circulo` reference solution (1px/1°×360) never passed its own validate (which required value 10); realigned instructions + validate to the 1px/1° approach. ✔️ Done.
 
 ## Feature Triage
 
-- Add explanatory animations instead of running text, for greater student engagement.
-- Create an interactive tutorial for the student.
-- Add visual editing elements (e.g., letter color in the 1st chapter, font size in the 2nd, letter color in the 3rd, etc.).
-- Exercises 19, 20 and 21: Make execution faster.
-- Exercise 13 onwards: There is no need to add `const podeAvancar: boolean = true;` as it is already predefined in the code.
+- Add explanatory animations instead of running text, for greater student engagement. (large — still open)
+- Create an interactive tutorial for the student. (large — still open)
+- Add visual editing elements (e.g., letter color in the 1st chapter, font size in the 2nd, letter color in the 3rd, etc.). (still open)
+- ~~Exercises 19, 20 and 21: Make execution faster.~~ ✔️ Done — lower frame floor + inter-move delay on the donatello loop exercises.
+- ~~Exercise 13 onwards: There is no need to add `const podeAvancar: boolean = true;` as it is already predefined in the code.~~ ✔️ Done (`booleanos` instruction reworded).
+- New: optional "Avançado" collapsible section per exercise for deeper detail. ✔️ Done (added to 8 exercises so far; more can be filled in incrementally).
 
 ## Task Status
 
@@ -36,3 +38,7 @@
 | Desafios (arquiteto, mvp-futebol): strip starter code, add tip ladder [feature] | | | ✔️ | Claude |
 | aleatorio: dice feedback reads s.die/s.dice, not s.rolls [bug] | | | ✔️ | Claude |
 | palavra-passe: new exercise on strings and .length [feature] | | | ✔️ | Claude |
+| "Avançado" collapsible advanced-explanation section + content [feature] | | | ✔️ | Claude |
+| Exercises 19-21: faster donatello loop execution [feature] | | | ✔️ | Claude |
+| booleanos: don't tell students to create predefined podeAvancar [feature] | | | ✔️ | Claude |
+| donatello-circulo: solution now satisfies its own validate [bug] | | | ✔️ | Claude |
