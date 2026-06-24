@@ -96,7 +96,7 @@ _All nine resolved 2026-06-23 (✔️ in Task Status (QA) below)._
 
 ## Reviewer Feedback (2026-06-24)
 
-> Note on unifying function names: deferred. The per-exercise display helpers are context-descriptive (mostrarDado, mostrarCifra, mostrarTipo, ...) and `mostrarMensagem` (painel) vs `escrever` (terminal) do genuinely different things. A blanket rename touches every exercise (api/starter/solution/validate/checks) and risks breakage, so it needs a deliberate decision on which names to standardise.
+> Note on unifying function names: ✔️ Done (2026-06-25). After the reviewer chose mostrar/escrever, every per-exercise result helper (mostrarMensagem, mostrarResultado, mostrarValor, mostrarItem, mostrarTipo, mostrarTotal, mostrarDado, mostrarCifra, mostrarTexto, mostrarForca, mostrarPi, mostrarErro) was renamed to a single mostrar() for the panel; escrever() stays for terminal output. Scene-building actions (criarCartao, ligarSemaforo, donatello.*, criarArvore, ...) kept their descriptive names.
 
 > Overarching goal: adapt the guide for students with very little programming experience — a slightly stronger tutorial component that helps them translate their reasoning into code.
 
@@ -138,3 +138,35 @@ _All nine resolved 2026-06-23 (✔️ in Task Status (QA) below)._
 | formula: include the quadratic formula in the briefing [feature] | | | ✔️ | Claude |
 | arvore-procura: add an intermediate simple-tree exercise [feature] | | | ✔️ | Claude |
 
+## Reviewer Feedback — Round 2 (2026-06-25)
+
+> Curriculum re-order, boolean operators and the "what to do" label.
+
+### Done
+
+- ~~Move the boolean-operators exercise to be the first in Decisões, Ciclos e Jogos.~~ ✔️ operadores-logicos is now #13 (chapter start).
+- ~~Rename "E, OU (&& e ||)" to "Operações Booleanas" and show an example of the ! (NOT).~~ ✔️ Title + !true→false / !false→true in the explanation and animation.
+- ~~Add the numeric comparisons (>, <, ==, ===) to booleanos.~~ ✔️ In the explanation; == vs === in the Avançado.
+- ~~Explain the difference between == and ===.~~ ✔️ booleanos Avançado: === compares value AND type; == coerces types first (0 == "0" is true); a single = assigns.
+- ~~New boolean exercise to practise comparisons (prefill with comparisons, student picks the correct operator so all are true).~~ ✔️ Added `comparacoes` (#15): 6 prefilled-false comparisons; fix the operators until every line is ✅.
+- ~~"O ciclo for e o break" should be one of the last (probably 21).~~ ✔️ #21.
+- ~~Move Galeria de frutas to 20.~~ ✔️ #20.
+- ~~Change the "Objetivos" label to "O que deves fazer".~~ ✔️ Done.
+
+### Task Status (Round 2)
+
+| Task name [feature]/[bug] | To implement | Implementing | Ready | Responsible |
+|---------------------------|--------------|--------------|-------|-------------|
+| operadores-logicos first in Decisões/Ciclos chapter [feature] | | | ✔️ | Claude |
+| Rename to "Operações Booleanas" + show the ! (NOT) operator [feature] | | | ✔️ | Claude |
+| Numeric comparisons (>, <, ==, ===) added to booleanos [feature] | | | ✔️ | Claude |
+| Explain == vs === (and = for assignment) [feature] | | | ✔️ | Claude |
+| New comparacoes exercise: fix operators until all true [feature] | | | ✔️ | Claude |
+| Galeria de frutas → #20, ciclo for + break → #21 [feature] | | | ✔️ | Claude |
+| Rename briefing label "Objetivos" → "O que deves fazer" [feature] | | | ✔️ | Claude |
+
+## Still open
+
+- Create an interactive tutorial for the student. (large)
+- Add visual editing elements per chapter (extend visualControls coverage).
+- Fill in animations / Curiosidade / advanced for the exercises that do not have them yet.
