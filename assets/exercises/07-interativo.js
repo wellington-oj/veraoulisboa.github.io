@@ -107,7 +107,7 @@ window.exerciseTopics.push({
       terminal: true,
       explanation: [
         'Até agora, os números estavam escritos diretamente no código. Mas um programa de verdade recebe dados de quem o usa.',
-        'A função lerInput devolve sempre texto. Para fazer contas, precisamos de converter esse texto num número com [Number()].',
+        'A função [lerInput] devolve sempre texto. Para fazer contas, precisamos de converter esse texto num número com [Number()].',
         'Este padrão (pedir, converter, calcular) é muito comum em qualquer linguagem de programação.',
       ],
       instructions: [
