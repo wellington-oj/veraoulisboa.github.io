@@ -38,7 +38,7 @@ window.exerciseTopics.push({
         'Muda a cor e o tamanho das etiquetas para veres essas escolhas no código.',
       ],
       observation: 'Cada elemento da lista deve aparecer como uma etiqueta no painel.',
-      hint: 'Cria a lista primeiro. Depois usa um ciclo [`for...of`] para passar por cada fruta e chama [adicionarFruta] dentro do ciclo. As frutas devem ser strings, e o `of` no `for...of` significa "para cada elemento da lista".',
+      hint: 'Cria a lista primeiro. Depois usa um ciclo `for...of` para passar por cada fruta e chama `adicionarFruta` dentro do ciclo. As frutas devem ser strings, e o `of` no `for...of` significa "para cada elemento da lista".',
       starter: 'const frutas: string[] = [];\n\n// cria o ciclo aqui\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
       solution: 'const frutas: string[] = ["maçã", "banana", "kiwi"];\n\nfor (const fruta of frutas) {\n  adicionarFruta(fruta);\n}\n\nmudarCorEtiquetas("#e8eef7");\nmudarTamanhoEtiquetas(16);',
       html: `
@@ -464,20 +464,20 @@ window.exerciseTopics.push({
       title: 'Listas e índices',
       points: 10,
       explanation: [
-        'Uma lista (ou array) guarda vários valores numa só variável, por ordem. Declaramos com [const cores: string[] = ["vermelho", "verde", "azul"];].',
-        'Cada valor tem uma posição, o índice. A contagem começa em 0: [cores[0]] é "vermelho", [cores[1]] é "verde" e [cores[2]] é "azul".',
-        'Aceder a um índice que não existe (por exemplo [cores[3]] aqui) dá [undefined].',
+        'Uma lista (ou array) guarda vários valores numa só variável, por ordem. Declaramos com `const cores: string[] = ["vermelho", "verde", "azul"];`.',
+        'Cada valor tem uma posição, o índice. A contagem começa em 0: `cores[0]` é "vermelho", `cores[1]` é "verde" e `cores[2]` é "azul".',
+        'Aceder a um índice que não existe (por exemplo `cores[3]` aqui) dá `undefined`.',
       ],
       advanced: [
-        'O número de elementos está em [cores.length]. Como os índices vão de 0 a [length - 1], o último elemento é [cores[cores.length - 1]].',
+        'O número de elementos está em `cores.length`. Como os índices vão de 0 a `length - 1`, o último elemento é `cores[cores.length - 1]`.',
       ],
       animation: '<div class="cax"><div class="big"><span class="cax-pop">[0] 🔴</span> <span class="cax-pop d1">[1] 🟢</span> <span class="cax-pop d2">[2] 🔵</span></div><div class="lbl">o índice começa em 0</div></div>',
       instructions: [
         'Cria uma lista [cores] do tipo [string[]] com pelo menos 3 cores.',
-        'Mostra o elemento na posição 1 com [mostrar(cores[1])].',
+        'Mostra o elemento na posição 1 com `mostrar(cores[1])`.',
       ],
-      observation: 'Como os índices começam em 0, [cores[1]] é o segundo elemento da lista.',
-      hint: 'O primeiro elemento é [cores[0]]; o segundo é [cores[1]].',
+      observation: 'Como os índices começam em 0, `cores[1]` é o segundo elemento da lista.',
+      hint: 'O primeiro elemento é `cores[0]`; o segundo é `cores[1]`.',
       starter: 'const cores: string[] = [];\n\n// mostra o elemento no índice 1',
       solution: 'const cores: string[] = ["vermelho", "verde", "azul"];\n\nmostrar(cores[1]);',
       html: `
@@ -592,7 +592,7 @@ window.exerciseTopics.push({
       instructions: [
         'Corrige o operador de cada comparação para que o resultado seja [true].',
         'Não mudes os números, só os operadores ([>], [<], [>=], [<=], [===], [!==]).',
-        'Tente resolver sem repetir os operadores.',
+        'Tenta resolver sem repetir os operadores.',
         'No fim, todas as linhas do painel devem ficar com ✅.'
 
       ],

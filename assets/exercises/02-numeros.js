@@ -148,11 +148,11 @@ window.exerciseTopics = window.exerciseTopics || [];
           'Nesta atividade, modifique o código para garantir que somente vai imprimir o número selecionado se ele for maior do que 5.'
         ],
         instructions: [
-          'Altere o valor da variável numero para verificar se o código funciona com valores diferentes.',
-          'Se numero for maior do que 5, mostre o número'
+          'Altera o valor da variável [numero] para verificar se o código funciona com valores diferentes.',
+          'Se numero for maior do que 5, mostra o número'
         ],
         observation: 'Caso o número seja menor do que 5, o programa não deve fazer nada. Se o número for exatamente igual a 5, irá resultar numa mensagem diferente.',
-        hint: 'Deve somente alterar o valor da variavel. O restante do código deve funcionar sem alterações',
+        hint: 'Deves somente alterar o valor da variável. O restante do código deve funcionar sem alterações',
         starter: 'const numero: number = -1;\n\nif (numero === 5){\n mostrar(numero);\n}\n\nif (numero > 5) {\n  mostrar(numero);\n}',
         solution: 'const numero: number = 10;\n\nif (numero === 5){\n mostrar(numero);\n}\n\nif (numero > 5) {\n  mostrar(numero);\n}',
         html: `
@@ -204,11 +204,11 @@ window.exerciseTopics = window.exerciseTopics || [];
           'Cria uma variável dividendo com o valor 5',
           'Usa if para verificar se o divisor é zero.',
           'Se for zero, chama [mostrar("Não posso dividir por zero");].',
-          'Caso contrário [else{...}] faça o que seria esperado, i.e., divisão do dividendo pelo divisor, utilizando [mostrar(...);]',
+          'Caso contrário [else{...}] faz o que seria esperado, i.e., a divisão do dividendo pelo divisor, utilizando [mostrar(...);]',
         ],
         observation: 'O resultado correto não é uma conta; é uma mensagem clara para a pessoa que usa o programa.',
         hint: 'Antes de dividir, usa uma decisão: se o divisor for zero, mostra uma mensagem de erro em vez de fazer a conta.',
-        starter: '// crie a variável divisor aqui;\n\n// crie a variável dividendo aqui;\n\n// testa o divisor aqui',
+        starter: '// cria a variável divisor aqui;\n\n// cria a variável dividendo aqui;\n\n// testa o divisor aqui',
         solution: 'const divisor: number = 0;\nconst dividendo: number = 5;\n\nif (divisor === 0) {\n  mostrar("Não posso dividir por zero");\n} else {\n  mostrar(dividendo / divisor);\n}',
         html: `
         <main class="stage">
