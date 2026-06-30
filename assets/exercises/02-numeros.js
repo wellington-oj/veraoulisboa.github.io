@@ -208,7 +208,7 @@ window.exerciseTopics = window.exerciseTopics || [];
         ],
         observation: 'O resultado correto não é uma conta; é uma mensagem clara para a pessoa que usa o programa.',
         hint: 'Antes de dividir, usa uma decisão: se o divisor for zero, mostra uma mensagem de erro em vez de fazer a conta.',
-        starter: '// cria a variável divisor aqui;\n\n// cria a variável dividendo aqui;\n\n// testa o divisor aqui',
+        starter: 'const divisor: number = 0;\nconst dividendo: number = 5;\n\nif (divisor === 0) {\n  // mostra mensagem de erro aqui\n} else {\n  // faz a divisão aqui\n}',
         solution: 'const divisor: number = 0;\nconst dividendo: number = 5;\n\nif (divisor === 0) {\n  mostrar("Não posso dividir por zero");\n} else {\n  mostrar(dividendo / divisor);\n}',
         html: `
         <main class="stage">
@@ -226,7 +226,12 @@ window.exerciseTopics = window.exerciseTopics || [];
           window.exerciseState.result = message;
         }
       `,
-        validate: (code, state) => /\bif\s*\(/.test(code) && /divisor\s*={2,3}\s*0/.test(code) && /zero/i.test(state.result || ''),
+        validate: (code, state) => {
+          const hasIfElse = /\bif\s*\(/.test(code) && /\belse\b/.test(code);
+          const hasCondition = /divisor\s*={2,3}\s*0/.test(code);
+          const bothBranches = (code.match(/\bmostrar\s*\(/g) || []).length >= 2;
+          return hasIfElse && hasCondition && bothBranches && !!state.result;
+        },
       },
       {
         id: 'palavra-passe',
