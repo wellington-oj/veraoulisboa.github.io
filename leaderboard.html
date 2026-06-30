@@ -716,13 +716,10 @@
       sessionStorage.setItem('lbUserHash', docId);
       currentUserHash = docId;
 
-      // Mask the email so the plain-text email is NEVER stored in the database
-      const maskedEmail = email.replace(/(.{2}).*(@.*)/, '$1…$2');
-
       const app = loadAppState();
       const entry = {
         name,
-        email: maskedEmail, // Store masked email to ensure absolute privacy
+        email, // full email stored in Firebase; masked only when displayed
         group,             // Optional class/group code
         score: app.score ?? 0,
         completed: app.completed ? Object.keys(app.completed).length : 0,
