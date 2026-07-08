@@ -218,9 +218,13 @@ function renderActiveExercise() {
   saveState();
 
   lastRunState = {};
+  currentRunIsActive = false;
+  currentRunCanScore = false;
+  syncRunControls();
   syncTerminalVisibility();
   VisualTools.render(exercise, editor);
-  runStudentCode(false);
+  document.getElementById('preview').srcdoc = '<!DOCTYPE html><html><head></head><body></body></html>';
+  setFeedback('', 'neutral');
   renderExerciseList();
   updateHeader();
 }
