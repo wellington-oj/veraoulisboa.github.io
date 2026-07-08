@@ -117,16 +117,23 @@ window.PreviewBuilder = (() => {
     return typeof exercise.api === 'function' ? exercise.api() : exercise.api;
   }
 
+  // Injects a guard call inside every loop body so a synchronous infinite
+  // loop throws after ~4 s instead of freezing the browser tab.
+  // (setTimeout cannot interrupt synchronous JS — only in-loop checks can.)
+  function addLoopGuard(code) {
+    const header =
+      'var __gs=Date.now();' +
+      'function __g(){if(Date.now()-__gs>4000)' +
+      'throw new Error("O programa foi parado — verifica se tens um ciclo infinito.");}';
+    return header + code
+      .replace(/\b(for|while)\b([^{]*)\{/g, '$1$2{__g();')
+      .replace(/\bdo\s*\{/g, 'do{__g();');
+  }
+
   function buildDocument(exercise, studentCode, forCodePen = false) {
-    const runnableCode = forCodePen ? studentCode : AppUtils.stripTypeScript(studentCode);
+    const stripped = forCodePen ? studentCode : AppUtils.stripTypeScript(studentCode);
+    const runnableCode = forCodePen ? stripped : addLoopGuard(stripped);
     const isInteractive = exercise.interactive === true || /lerInput\s*\(/.test(studentCode);
-    const timeoutGuard = (forCodePen || isInteractive) ? '' : `
-      setTimeout(() => {
-        if (!window.exerciseFinished) {
-          parent.postMessage({ type: 'student-code-error', message: 'O programa demorou demasiado. Verifica se tens um ciclo infinito.', state: window.exerciseState }, '*');
-        }
-      }, 3000);
-    `;
 
     const placeholder = 'window.exerciseState.lineOffset = 0;';
     const tempPrefixHtml = `<!DOCTYPE html>
@@ -145,7 +152,6 @@ window.PreviewBuilder = (() => {
   <script>
     (async () => {
       try {
-        ${timeoutGuard}
 `;
 
     const lineOffset = tempPrefixHtml.split('\n').length;
