@@ -117,24 +117,8 @@ window.PreviewBuilder = (() => {
     return typeof exercise.api === 'function' ? exercise.api() : exercise.api;
   }
 
-  // Injects a guard call inside every loop body so a synchronous infinite
-  // loop throws after ~4 s instead of freezing the browser tab.
-  // (setTimeout cannot interrupt synchronous JS — only in-loop checks can.)
-  function addLoopGuard(code) {
-    // Two checks: iteration count catches tight loops (while(true){}) in <1 ms;
-    // time check catches slow-body loops that run few but expensive iterations.
-    const header =
-      'var __gi=0,__gs=Date.now();' +
-      'function __g(){if(++__gi>1e6||Date.now()-__gs>2000)' +
-      'throw new Error("O programa foi parado — verifica se tens um ciclo infinito.");}';
-    return header + code
-      .replace(/\b(for|while)\b([^{]*)\{/g, '$1$2{__g();')
-      .replace(/\bdo\s*\{/g, 'do{__g();');
-  }
-
   function buildDocument(exercise, studentCode, forCodePen = false) {
-    const stripped = forCodePen ? studentCode : AppUtils.stripTypeScript(studentCode);
-    const runnableCode = forCodePen ? stripped : addLoopGuard(stripped);
+    const runnableCode = forCodePen ? studentCode : AppUtils.stripTypeScript(studentCode);
     const isInteractive = exercise.interactive === true || /lerInput\s*\(/.test(studentCode);
 
     const placeholder = 'window.exerciseState.lineOffset = 0;';
