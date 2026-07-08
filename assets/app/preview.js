@@ -121,9 +121,11 @@ window.PreviewBuilder = (() => {
   // loop throws after ~4 s instead of freezing the browser tab.
   // (setTimeout cannot interrupt synchronous JS — only in-loop checks can.)
   function addLoopGuard(code) {
+    // Two checks: iteration count catches tight loops (while(true){}) in <1 ms;
+    // time check catches slow-body loops that run few but expensive iterations.
     const header =
-      'var __gs=Date.now();' +
-      'function __g(){if(Date.now()-__gs>4000)' +
+      'var __gi=0,__gs=Date.now();' +
+      'function __g(){if(++__gi>1e6||Date.now()-__gs>2000)' +
       'throw new Error("O programa foi parado — verifica se tens um ciclo infinito.");}';
     return header + code
       .replace(/\b(for|while)\b([^{]*)\{/g, '$1$2{__g();')
